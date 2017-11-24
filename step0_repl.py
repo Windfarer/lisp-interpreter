@@ -1,12 +1,11 @@
 def READ():
     return input("user> ")
 
-def EVAL(arg):
-    return arg
+def EVAL(string):
+    return string
 
-def PRINT(arg):
-    print(arg)
-    return arg
+def PRINT(string):
+    print(string)
 
 def rep():
     while True:
