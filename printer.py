@@ -1,5 +1,6 @@
 from mal_types import MalType, MalSymbol, MalNumber, MalList
 
+
 def pr_str(obj):
     if isinstance(obj, MalSymbol):
         return obj.value

@@ -1,7 +1,7 @@
 import re
 from mal_types import MalType, MalList, MalNumber, MalSymbol
 
-_mal_token_pattern = re.compile('[\s,]*(~@|[\[\]{}()\'`~^@]|"(?:\\.|[^\\"])*"|;.*|[^\s\[\]{}(\'"`,;)]*)')
+_mal_token_pattern = re.compile('''[\s,]*(~@|[\[\]{}()'`~^@]|"(?:\\.|[^\\"])*"|;.*|[^\s\[\]{}('"`,;)]*)''')
 
 
 class Reader(object):
@@ -28,12 +28,11 @@ class Reader(object):
 def read_list(reader):
     result = list()
     token = read_form(reader)
-    while token != ")" and token is not None:
-        print("xx", token)
+    while token is not None:
         result.append(token)
         token = read_form(reader)
-    print(result)
     return result
+
 
 def read_atom(token):
     if token.isdigit():
@@ -43,11 +42,11 @@ def read_atom(token):
 
 def read_form(reader):
     token = reader.next()
-    print(token)
-    if token == '(':
+    if token[0] == '(':
         return read_list(reader)
-    else:
-        return read_atom(token)
+    elif token == ')':
+        return None
+    return read_atom(token)
 
 
 def tokenizer(string):
@@ -57,9 +56,9 @@ def tokenizer(string):
 
 def read_str(string):
     tokens = tokenizer(string)
-    print(tokens)
     reader = Reader(tokens)
     return read_form(reader)
+
 
 if __name__ == '__main__':
     print(tokenizer("(+ 2 (* 3 4) )"))
