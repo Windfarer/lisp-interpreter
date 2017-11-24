@@ -1,7 +1,7 @@
 import re
 from mal_types import MalType, MalList, MalNumber, MalSymbol
 
-_mal_token_pattern = re.compile(r'[\s,]*(~@|[\[\]{}()\'`~^@]|"(?:\\.|[^\\"])*"|;.*|[^\s\[\]{}(\'"`,;)]*)')
+_mal_token_pattern = re.compile('[\s,]*(~@|[\[\]{}()\'`~^@]|"(?:\\.|[^\\"])*"|;.*|[^\s\[\]{}(\'"`,;)]*)')
 
 
 class Reader(object):
@@ -26,26 +26,28 @@ class Reader(object):
 
 
 def read_list(reader):
-    result = MalList()
-    item = reader.next()
-    while item is not None:
-        print("xx", item)
-        result.append(read_form(reader))
+    result = list()
+    token = read_form(reader)
+    while token != ")" and token is not None:
+        print("xx", token)
+        result.append(token)
+        token = read_form(reader)
+    print(result)
     return result
 
-def read_atom(reader):
-    item = reader.peek()
-    if item.isdigit():
-        return MalNumber(item)
-    return MalSymbol(item)  # symbol?
+def read_atom(token):
+    if token.isdigit():
+        return MalNumber(token)
+    return MalSymbol(token)  # symbol?
 
 
 def read_form(reader):
-    first_char = reader.next()
-    if first_char == '(':
+    token = reader.next()
+    print(token)
+    if token == '(':
         return read_list(reader)
     else:
-        return read_atom(reader)
+        return read_atom(token)
 
 
 def tokenizer(string):
