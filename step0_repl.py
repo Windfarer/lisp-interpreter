@@ -1,15 +1,15 @@
-def READ():
-    return input("user> ")
+def READ(string):
+    return string
 
 def EVAL(string):
     return string
 
 def PRINT(string):
-    print(string)
+    return string
 
 def rep():
     while True:
-        PRINT(EVAL(READ()))
+        print(PRINT(EVAL(READ(input("user> ")))))
 
 if __name__ == '__main__':
     rep()
