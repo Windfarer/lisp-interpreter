@@ -3,6 +3,11 @@ from mal_types import MalType, MalList, MalNumber, MalSymbol
 
 _mal_token_pattern = re.compile('''[\s,]*(~@|[\[\]{}()'`~^@]|"(?:\\.|[^\\"])*"|;.*|[^\s\[\]{}('"`,;)]*)''')
 
+_p_mapping = {
+    '(': ')',
+    '[': ']',
+    '{': '}'
+}
 
 class Reader(object):
     def __init__(self, tokens=None):
@@ -26,27 +31,33 @@ class Reader(object):
 
 
 def read_list(reader):
-    result = MalList()
-    token = read_form(reader)
-    while token is not None:
-        result.append(token)
+    first_token = reader.peek()
+    result = MalList(p_type=first_token+_p_mapping[first_token])
+    reader.next()
+    while True:
         token = read_form(reader)
+        if token is None:
+             break
+        elif token is "":
+            return "expected '{}', got EOF".format(result.p_type[1])
+        result.append(token)
+        reader.next()
     return result
 
 
 def read_atom(token):
     if token.isdigit():
         return MalNumber(token)
-    elif token.startswith('('):
-        token = token[1:]
     return MalSymbol(token)  # symbol?
 
 
 def read_form(reader):
-    token = reader.next()
-    if token[0] == '(':
+    token = reader.peek()
+    if not token:
+        return ""
+    if token in _p_mapping.keys():
         return read_list(reader)
-    elif token == ')':
+    elif token in _p_mapping.values():
         return None
     return read_atom(token)
 
@@ -58,6 +69,7 @@ def tokenizer(string):
 
 def read_str(string):
     tokens = tokenizer(string)
+    # print(tokens)
     reader = Reader(tokens)
     return read_form(reader)
 
