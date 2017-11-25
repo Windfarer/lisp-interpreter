@@ -26,7 +26,7 @@ class Reader(object):
 
 
 def read_list(reader):
-    result = list()
+    result = MalList()
     token = read_form(reader)
     while token is not None:
         result.append(token)
@@ -37,6 +37,8 @@ def read_list(reader):
 def read_atom(token):
     if token.isdigit():
         return MalNumber(token)
+    elif token.startswith('('):
+        token = token[1:]
     return MalSymbol(token)  # symbol?
 
 
