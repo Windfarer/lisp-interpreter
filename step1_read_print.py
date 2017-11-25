@@ -16,8 +16,10 @@ def PRINT(ast):
 
 def rep():
     while True:
-        print(PRINT(EVAL(READ(input("user> ")))))
-
+        try:
+            print(PRINT(EVAL(READ(input("user> ")))))
+        except Exception as e:
+            print(e)
 
 if __name__ == '__main__':
     rep()

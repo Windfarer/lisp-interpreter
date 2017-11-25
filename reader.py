@@ -59,15 +59,18 @@ def read_list(reader):
     if error:
         if token is None:
             token = 'EOF'
-        return "expected '{}', got {}".format(result.p_type[1], token)
+        raise Exception("expected '{}', got {}".format(result.p_type[1], token))
     return result
 
 
 def read_atom(reader):
     token = reader.peek()
     # print(token)
-    if token.isdigit():
-        return MalNumber(token)
+    try:
+        val = int(token)
+        return MalNumber(val)
+    except ValueError:
+        pass
     if token in _quote_mapping:
         reader.next()
         return MalList(p_type="()", seq=[_quote_mapping[token], read_form(reader)])
