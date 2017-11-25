@@ -1,8 +1,8 @@
 class MalType(object):
     value = "<MalType>"
 
-    def __repr__(self):
-        return repr(self.value)
+    def __str__(self):
+        return str(self.value)
 
 
 class MalList(MalType, list):
