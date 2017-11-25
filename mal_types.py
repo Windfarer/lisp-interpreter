@@ -6,9 +6,11 @@ class MalType(object):
 
 
 class MalList(MalType, list):
-    def __init__(self, p_type, *args, **kwargs):
+    def __init__(self, p_type, seq=None):
+        if not seq:
+            seq = ()
+        super(MalList, self).__init__(seq)
         self.p_type = p_type
-        super(MalList).__init__(*args, **kwargs)
     pass
 
 
