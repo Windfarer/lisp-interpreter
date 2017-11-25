@@ -1,6 +1,6 @@
 import reader
 import printer
-
+from mal_types import MalException
 
 def READ(string):
     return reader.read_str(string)
@@ -18,7 +18,7 @@ def rep():
     while True:
         try:
             print(PRINT(EVAL(READ(input("user> ")))))
-        except Exception as e:
+        except MalException as e:
             print(e)
 
 if __name__ == '__main__':

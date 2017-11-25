@@ -12,17 +12,19 @@ def EVAL(ast, env):
     elif not ast:
         return ast
     elif isinstance(ast, mal_types.MalList):
-        rv = eval_ast(ast, env)
-        return rv[0](*rv[1:])
+        ast = eval_ast(ast, env)
+        if callable(ast[0]):
+            return ast[0](*ast[1:])
+        else:
+            return ast
     return ast.value
 
 
 def eval_ast(ast, env):
     if isinstance(ast, mal_types.MalSymbol):
-        # print(ast.value)
         fn = env.get(ast.value)
         if not fn:
-            raise Exception("'{}' not found.".format(ast.value))
+            raise mal_types.MalException("'{}' not found.".format(ast.value))
         return fn
     elif isinstance(ast, mal_types.MalList):
         return mal_types.MalList(ast.p_type, seq=[EVAL(i, env) for i in ast])
@@ -43,7 +45,7 @@ def rep():
     while True:
         try:
             print(PRINT(EVAL(READ(input("user> ")), repl_env)))
-        except Exception as e:
+        except mal_types.MalException as e:
             print(e)
 
 

@@ -27,3 +27,15 @@ class MalSymbol(MalType):
     def __init__(self, value):
         self.value = str(value)
 
+
+class MalString(MalType):
+    def __init__(self, value):
+        self.value = str(value)
+
+
+class MalKeyword(MalType):
+    def __init__(self, value):
+        self.value = str(value)
+
+class MalException(Exception):
+    pass

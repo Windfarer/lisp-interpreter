@@ -1,5 +1,5 @@
 import re
-from mal_types import MalType, MalList, MalNumber, MalSymbol
+from mal_types import MalType, MalList, MalNumber, MalSymbol, MalString, MalException, MalKeyword
 
 _mal_token_pattern = re.compile(r'''[\s,]*(~@|[\[\]{}()'`~^@]|"(?:\\.|[^\\"])*"|;.*|[^\s\[\]{}('"`,;)]*)''')
 
@@ -59,7 +59,7 @@ def read_list(reader):
     if error:
         if token is None:
             token = 'EOF'
-        raise Exception("expected '{}', got {}".format(result.p_type[1], token))
+        raise MalException("expected '{}', got {}".format(result.p_type[1], token))
     return result
 
 
@@ -80,6 +80,10 @@ def read_atom(reader):
         reader.next()
         lst = read_form(reader)
         return MalList(p_type="()", seq=["with-meta", lst, meta_data])
+    if token.startswith('"') and token.endswith('"'):
+        return MalString(token)
+    if token.startswith(":"):
+        return MalKeyword(token)
     return MalSymbol(token)  # symbol?
 
 
