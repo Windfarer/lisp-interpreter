@@ -18,6 +18,4 @@ class Env(object):
 
     def get(self, key):
         env = self.find(key)
-        if not env:
-            raise MalException("'{}' not found.".format(key))
         return env.data[key]
