@@ -19,7 +19,6 @@ def EVAL(ast, env):
             env.set(ast[1].value, value)
             return value
         elif isinstance(ast[0], mal_types.MalSymbol) and ast[0].value == 'let*':
-            # todo
             let_env = Env(outer=env)
             for k ,v in  zip(ast[1][::2], ast[1][1::2]):
                 let_env.set(k.value, EVAL(v, let_env))
