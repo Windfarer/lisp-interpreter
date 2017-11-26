@@ -11,13 +11,11 @@ class MalList(MalType, list):
             seq = ()
         super(MalList, self).__init__(seq)
         self.p_type = p_type
-    pass
 
 
 class MalNumber(MalType):
     def __init__(self, value):
         self.value = int(value)
-
 
     def to_str(self):
         return str(self.value)
