@@ -36,15 +36,6 @@ class MalKeyword(MalType):
         self.value = str(value)
 
 
-class MalNil(MalType, None):
-    def __str__(self):
-        return 'nil'
-
-
-class MalBool(MalType, bool):
-    def __str__(self):
-        return ''
-
 class MalException(Exception):
     pass
 
