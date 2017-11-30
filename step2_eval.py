@@ -17,18 +17,18 @@ def EVAL(ast, env):
             return ast[0](*ast[1:])
         else:
             return ast
-    return ast.value
+    return ast.data
 
 
 def eval_ast(ast, env):
     if isinstance(ast, mal_types.MalSymbol):
-        fn = env.get(ast.value)
+        fn = env.get(ast.data)
         if not fn:
-            raise mal_types.MalException("'{}' not found.".format(ast.value))
+            raise mal_types.MalException("'{}' not found.".format(ast.data))
         return fn
     elif isinstance(ast, mal_types.MalList):
-        return mal_types.MalList(ast.p_type, seq=[EVAL(i, env) for i in ast])
-    return ast.value
+        return mal_types.MalList([EVAL(i, env) for i in ast])
+    return ast.data
 
 
 def PRINT(ast):

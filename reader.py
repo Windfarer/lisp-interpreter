@@ -1,5 +1,5 @@
 import re
-from mal_types import MalType, MalList, MalNumber, MalSymbol, MalString, MalException, MalKeyword
+import mal_types
 
 _mal_token_pattern = re.compile(r'''[\s,]*(~@|[\[\]{}()'`~^@]|"(?:\\.|[^\\"])*"|;.*|[^\s\[\]{}('"`,;)]*)''')
 
@@ -40,7 +40,7 @@ class Reader(object):
 
 def read_list(reader):
     first_token = reader.peek()
-    result = MalList(p_type=first_token+_p_mapping[first_token])
+    result = mal_types.MalList()
     error = False
     reader.next()
     while True:
@@ -59,7 +59,7 @@ def read_list(reader):
     if error:
         if token is None:
             token = 'EOF'
-        raise MalException("expected '{}', got {}".format(result.p_type[1], token))
+        raise mal_types.MalException("expected '{}', got {}".format(result.p_type[1], token))
     return result
 
 
@@ -68,23 +68,23 @@ def read_atom(reader):
     # print(token)
     try:
         val = int(token)
-        return MalNumber(val)
+        return mal_types.MalNumber(val)
     except ValueError:
         pass
     if token in _quote_mapping:
         reader.next()
-        return MalList(p_type="()", seq=[_quote_mapping[token], read_form(reader)])
+        return mal_types.MalList([_quote_mapping[token], read_form(reader)])
     if token == '^':
         reader.next()
         meta_data = read_form(reader)
         reader.next()
         lst = read_form(reader)
-        return MalList(p_type="()", seq=["with-meta", lst, meta_data])
+        return mal_types.MalList(["with-meta", lst, meta_data])
     if token.startswith('"') and token.endswith('"'):
-        return MalString(token)
+        return mal_types.MalString(token)
     if token.startswith(":"):
-        return MalKeyword(token)
-    return MalSymbol(token)  # symbol?
+        return mal_types.MalKeyword(token)
+    return mal_types.MalSymbol(token)  # symbol?
 
 
 def read_form(reader):
