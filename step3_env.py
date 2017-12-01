@@ -14,14 +14,14 @@ def EVAL(ast, env):
     elif not ast:
         return ast
     elif isinstance(ast, mal_types.MalList):
-        if isinstance(ast[0], mal_types.MalSymbol) and ast[0].value == 'def!':
+        if isinstance(ast[0], mal_types.MalSymbol) and ast[0].data == 'def!':
             value = EVAL(ast[2], env)
-            env.set(ast[1].value, value)
+            env.set(ast[1].data, value)
             return value
-        elif isinstance(ast[0], mal_types.MalSymbol) and ast[0].value == 'let*':
+        elif isinstance(ast[0], mal_types.MalSymbol) and ast[0].data == 'let*':
             let_env = Env(outer=env)
             for k ,v in  zip(ast[1][::2], ast[1][1::2]):
-                let_env.set(k.value, EVAL(v, let_env))
+                let_env.set(k.data, EVAL(v, let_env))
             return EVAL(ast[2], let_env)
         evaluated_ast = eval_ast(ast, env)
         if callable(evaluated_ast[0]):
@@ -37,7 +37,7 @@ def eval_ast(ast, env):
             raise mal_types.MalException("'{}' not found.".format(ast.data))
         return v
     elif isinstance(ast, mal_types.MalList):
-        return mal_types.MalList(ast.p_type, seq=[EVAL(i, env) for i in ast])
+        return mal_types.MalList([EVAL(i, env) for i in ast])
     return ast.data
 
 

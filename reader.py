@@ -45,7 +45,7 @@ def read_list(reader):
     reader.next()
     while True:
         token = read_form(reader)
-        if token in _p_mapping.values() and token != result.p_type[1]:
+        if token in _p_mapping and token != '}':
             error = True
             break
         if token is None:
@@ -59,7 +59,8 @@ def read_list(reader):
     if error:
         if token is None:
             token = 'EOF'
-        raise mal_types.MalException("expected '{}', got {}".format(result.p_type[1], token))
+        raise mal_types.MalException("expected '{}', got {}".format('}', token))
+    # print(result.data)
     return result
 
 
@@ -81,9 +82,15 @@ def read_atom(reader):
         lst = read_form(reader)
         return mal_types.MalList(["with-meta", lst, meta_data])
     if token.startswith('"') and token.endswith('"'):
-        return mal_types.MalString(token)
+        return mal_types.MalString(token[1:-1])
     if token.startswith(":"):
         return mal_types.MalKeyword(token)
+    if token in ('true', 'false'):
+        if token == 'true':
+            return mal_types.MalBool(True)
+        return mal_types.MalBool(False)
+    if token == 'nil':
+        return mal_types.MalNil()
     return mal_types.MalSymbol(token)  # symbol?
 
 

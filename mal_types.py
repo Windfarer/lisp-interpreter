@@ -1,8 +1,16 @@
+from collections import OrderedDict
+
 class MalType(object):
     data = None
 
+    def __repr__(self):
+        return repr(self.data)
+
     def __str__(self):
         return str(self.data)
+
+    def __bool__(self):
+        return bool(self.data)
 
 
 class MalList(MalType):
@@ -14,7 +22,7 @@ class MalList(MalType):
         self.data = data
 
     def __iter__(self):
-        pass # todo
+        return self.data.__iter__()
 
     def __getitem__(self, i):
         return self.data.__getitem__(i)
@@ -32,7 +40,7 @@ class MalVector(MalType):
         self.data = data
 
     def __iter__(self):
-        pass # todo
+        return self.data.__iter__()
 
     def __getitem__(self, i):
         return self.data.__getitem__(i)
@@ -44,13 +52,13 @@ class MalVector(MalType):
 class MalHashMap(MalType):
     def __init__(self, data=None):
         if not data:
-            data = {}
+            data = OrderedDict()
         if isinstance(data, MalHashMap):
             data = data.data
-        self.data = data
+        self.data = OrderedDict(data)
 
     def __iter__(self):
-        pass # todo
+        return self.data.__iter__()
 
     def __getitem__(self, key):
         return self.data.__getitem__(key)
@@ -83,10 +91,22 @@ class MalBool(MalType):
     def __init__(self, data):
         self.data = bool(data)
 
+    def __str__(self):
+        return 'true' if self.data else 'false'
+
+    def __bool__(self):
+        return self.data
+
 
 class MalNil(MalType):
-    def __init__(self, data):
-        self.data = bool(data)
+    def __init__(self):
+        self.data = None
+
+    def __str__(self):
+        return 'nil'
+
+    def __bool__(self):
+        return False
 
 
 class MalException(Exception):

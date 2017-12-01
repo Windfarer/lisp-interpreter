@@ -2,6 +2,7 @@ import reader
 import printer
 import mal_types
 
+
 def READ(string):
     return reader.read_str(string)
 
