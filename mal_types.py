@@ -4,13 +4,16 @@ class MalType(object):
     data = None
 
     def __repr__(self):
-        return repr(self.data)
+        return "<{} {}>".format(self.__class__.__name__, repr(self.data))
 
     def __str__(self):
         return str(self.data)
 
     def __bool__(self):
         return bool(self.data)
+
+    def __len__(self):
+        return self.data.__len__()
 
 
 class MalList(MalType):

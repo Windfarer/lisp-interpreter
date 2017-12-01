@@ -14,15 +14,33 @@ def EVAL(ast, env):
     elif not ast:
         return ast
     elif isinstance(ast, mal_types.MalList):
-        if isinstance(ast[0], mal_types.MalSymbol) and ast[0].data == 'def!':
-            value = EVAL(ast[2], env)
-            env.set(ast[1].data, value)
-            return value
-        elif isinstance(ast[0], mal_types.MalSymbol) and ast[0].data == 'let*':
-            let_env = Env(outer=env)
-            for k ,v in  zip(ast[1][::2], ast[1][1::2]):
-                let_env.set(k.data, EVAL(v, let_env))
-            return EVAL(ast[2], let_env)
+        if isinstance(ast[0], mal_types.MalSymbol):
+            if ast[0].data == 'def!':
+                value = EVAL(ast[2], env)
+                env.set(ast[1].data, value)
+                return value
+            elif  ast[0].data == 'let*':
+                let_env = Env(outer=env)
+                for k ,v in  zip(ast[1][::2], ast[1][1::2]):
+                    let_env.set(k, EVAL(v, let_env))
+                return EVAL(ast[2], let_env)
+            elif ast[0].data == 'do':
+                return eval_ast(ast[1:], env)
+            elif ast[0].data == 'if':
+                if EVAL(ast[1], env):
+                    return EVAL(ast[2], env)
+                else:
+                    if len(ast) > 2:
+                        return EVAL(ast[3], env)
+                    else:
+                        return mal_types.MalNil()
+            elif ast[0].data == 'fn*':
+                def closure(*exprs):
+                    new_env = Env(outer=env, binds=ast[1], exprs=exprs)
+                    # print(new_env.data)
+                    # print(ast[2])
+                    return EVAL(ast[2], new_env)
+                return closure
         evaluated_ast = eval_ast(ast, env)
         if callable(evaluated_ast[0]):
             return evaluated_ast[0](*evaluated_ast[1:])  # apply
@@ -31,14 +49,15 @@ def EVAL(ast, env):
 
 
 def eval_ast(ast, env):
+    # print('find', type(ast), )
     if isinstance(ast, mal_types.MalSymbol):
-        v = env.get(ast.data)
+        v = env.get(ast)
         if not v:
             raise mal_types.MalException("'{}' not found.".format(ast.data))
         return v
     elif isinstance(ast, mal_types.MalList):
         return mal_types.MalList([EVAL(i, env) for i in ast])
-    return ast.data
+    return ast
 
 
 def PRINT(ast):
@@ -47,10 +66,10 @@ def PRINT(ast):
 
 def rep():
     repl_env = Env()
-    repl_env.set('+', lambda a, b: a + b)
-    repl_env.set('-', lambda a, b: a - b)
-    repl_env.set('*', lambda a, b: a * b)
-    repl_env.set('/', lambda a, b: int(a / b))
+    repl_env.set('+', lambda a, b: a.data + b.data)  # fixme: add two maltype directly
+    repl_env.set('-', lambda a, b: a.data - b.data)
+    repl_env.set('*', lambda a, b: a.data * b.data)
+    repl_env.set('/', lambda a, b: int(a.data / b.data))
 
     while True:
         try:
