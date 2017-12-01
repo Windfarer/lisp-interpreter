@@ -10,7 +10,7 @@ class MalType(object):
         return str(self.data)
 
     def __bool__(self):
-        return bool(self.data)
+        return True
 
     def __len__(self):
         return len(self.data)
@@ -84,6 +84,8 @@ class MalSymbol(MalType):
     def __init__(self, data):
         self.data = str(data)
 
+    def __hash__(self):
+        return hash(self.data)
 
 class MalString(MalType):
     def __init__(self, data):

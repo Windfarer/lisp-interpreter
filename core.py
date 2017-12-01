@@ -11,8 +11,8 @@ ns = {
     "list?": lambda x: mal_types.MalBool(True if isinstance(x, mal_types.MalList) else False),
     "empty?": lambda x: mal_types.MalBool(len(x) == 0),
     "count": lambda x: mal_types.MalNumber(len(x)),
-    "=": lambda x,y: mal_types.MalBool(x==y),
-    "<=": lambda x,y: mal_types.MalBool(x<=y),
-    ">": lambda x,y: mal_types.MalBool(x>y),
-    ">=": lambda x,y: mal_types.MalBool(x>=y),
+    "=": lambda x,y: mal_types.MalBool(x.data==y.data),
+    "<=": lambda x,y: mal_types.MalBool(x.data<=y.data),
+    ">": lambda x,y: mal_types.MalBool(x.data>y.data),
+    ">=": lambda x,y: mal_types.MalBool(x.data>=y.data),
 }

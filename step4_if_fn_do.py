@@ -31,15 +31,13 @@ def EVAL(ast, env):
                 return eval_ast(ast[1:], env)
 
             elif ast[0].data == 'if':
+                # print(ast[1])
                 if EVAL(ast[1], env):
                     return EVAL(ast[2], env)
                 else:
-                    if len(ast) == 3:
-                        return EVAL(ast[2], env)
-                    elif len(ast) == 4:
+                    if len(ast) == 4:
                         return EVAL(ast[3], env)
-                    else:
-                        return mal_types.MalNil()
+                    return mal_types.MalNil()
 
             elif ast[0].data == 'fn*':
                 def closure(*exprs):
@@ -84,6 +82,7 @@ def rep():
         except mal_types.MalException as e:
             print(e)
         except Exception as e:
+            # raise e
             print(e)
 
 
