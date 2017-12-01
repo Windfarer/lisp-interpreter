@@ -15,6 +15,11 @@ class MalType(object):
     def __len__(self):
         return len(self.data)
 
+    def __le__(self, other):
+        return self.data.__le__(other.data)
+
+    def __lt__(self, other):
+        return self.data.__lt__(other.data)
 
 class MalList(MalType):
     def __init__(self, data=None):
@@ -92,7 +97,10 @@ class MalKeyword(MalType):
 
 class MalBool(MalType):
     def __init__(self, data):
-        self.data = bool(data)
+        if isinstance(data, bool):
+            self.data = data
+        else:
+            self.data = bool(data)
 
     def __str__(self):
         return 'true' if self.data else 'false'
