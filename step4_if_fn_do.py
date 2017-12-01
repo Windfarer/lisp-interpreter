@@ -34,8 +34,10 @@ def EVAL(ast, env):
                 if EVAL(ast[1], env):
                     return EVAL(ast[2], env)
                 else:
-                    if len(ast) > 2:
+                    if len(ast) == 3:
                         return EVAL(ast[2], env)
+                    elif len(ast) == 4:
+                        return EVAL(ast[3], env)
                     else:
                         return mal_types.MalNil()
 
