@@ -13,7 +13,7 @@ class MalType(object):
         return bool(self.data)
 
     def __len__(self):
-        return self.data.__len__()
+        return len(self.data)
 
 
 class MalList(MalType):
@@ -110,6 +110,9 @@ class MalNil(MalType):
 
     def __bool__(self):
         return False
+
+    def __len__(self):
+        return 0
 
 
 class MalException(Exception):

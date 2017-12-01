@@ -1,6 +1,6 @@
 import mal_types
 
-def pr_str(obj):
+def pr_str(obj, print_readably=True):
     if isinstance(obj, mal_types.MalString):
         return '"{}"'.format(obj)
     if callable(obj):

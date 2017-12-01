@@ -2,7 +2,7 @@ import reader
 import printer
 import mal_types
 from env import Env
-
+from core import ns
 
 def READ(string):
     return reader.read_str(string)
@@ -66,10 +66,8 @@ def PRINT(ast):
 
 def rep():
     repl_env = Env()
-    repl_env.set('+', lambda a, b: a.data + b.data)  # fixme: add two maltype directly
-    repl_env.set('-', lambda a, b: a.data - b.data)
-    repl_env.set('*', lambda a, b: a.data * b.data)
-    repl_env.set('/', lambda a, b: int(a.data / b.data))
+    for k, v in ns.items():
+        repl_env.set(k, v)
 
     while True:
         try:
