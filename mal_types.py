@@ -21,6 +21,7 @@ class MalType(object):
     def __lt__(self, other):
         return self.data.__lt__(other.data)
 
+
 class MalList(MalType):
     def __init__(self, data=None):
         if not data:
@@ -78,6 +79,14 @@ class MalNumber(MalType):
 
     def to_str(self):
         return str(self.data)
+
+    def __hash__(self):
+        return hash(self.data)
+
+    def __eq__(self, other):
+        if isinstance(other, MalType):
+            return self.data == other.data
+        return self.data == other
 
 
 class MalSymbol(MalType):

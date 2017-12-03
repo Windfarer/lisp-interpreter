@@ -1,6 +1,7 @@
 from printer import pr_str
 import mal_types
 
+
 ns = {
     '+': lambda a, b: mal_types.MalNumber(a.data + b.data), # fixme: operate and return maltypes directly
     '-': lambda a, b: mal_types.MalNumber(a.data - b.data),
@@ -12,6 +13,7 @@ ns = {
     "empty?": lambda x: mal_types.MalBool(len(x) == 0),
     "count": lambda x: mal_types.MalNumber(len(x)),
     "=": lambda x,y: mal_types.MalBool(x.data==y.data),
+    "<": lambda x, y: mal_types.MalBool(x.data<y.data),
     "<=": lambda x,y: mal_types.MalBool(x.data<=y.data),
     ">": lambda x,y: mal_types.MalBool(x.data>y.data),
     ">=": lambda x,y: mal_types.MalBool(x.data>=y.data),

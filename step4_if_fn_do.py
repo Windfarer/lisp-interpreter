@@ -28,10 +28,11 @@ def EVAL(ast, env):
                 return EVAL(ast[2], let_env)
 
             elif ast[0].data == 'do':
-                return eval_ast(ast[1:], env)
+                for item in ast[1:]:
+                    ast = eval_ast(item, env)
+                return ast
 
             elif ast[0].data == 'if':
-                # print(ast[1])
                 if EVAL(ast[1], env):
                     return EVAL(ast[2], env)
                 else:
@@ -50,14 +51,13 @@ def EVAL(ast, env):
         if callable(evaluated_ast[0]):
             return evaluated_ast[0](*evaluated_ast[1:])  # apply
         return evaluated_ast
-    return ast
+    return mal_types.MalNil()
 
 
 def eval_ast(ast, env):
-    # print('find', type(ast), )
+    # print('find', ast)
     if isinstance(ast, mal_types.MalSymbol):
         v = env.get(ast)
-
         if not v:
             raise mal_types.MalException("'{}' not found.".format(ast.data))
         return v
@@ -75,7 +75,6 @@ def rep():
     repl_env = Env()
     for k, v in ns.items():
         repl_env.set(k, v)
-
     while True:
         try:
             print(PRINT(EVAL(READ(input("user> ")), repl_env)))
