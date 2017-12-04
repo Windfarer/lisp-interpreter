@@ -29,8 +29,7 @@ def EVAL(ast, env):
             elif ast[0].data == 'do':
                 # print(ast)
                 for item in ast[1:]:
-                    ast = eval_ast(item, env)
-                    ast = EVAL(ast, env)
+                    ast = EVAL(item, env)
                 return ast
 
             elif ast[0].data == 'if':
@@ -80,6 +79,7 @@ def rep():
         try:
             print(PRINT(EVAL(READ(input("user> ")), repl_env)))
         except mal_types.MalException as e:
+            # raise e
             print(e)
         except Exception as e:
             # raise e
