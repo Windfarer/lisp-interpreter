@@ -1,13 +1,16 @@
 from printer import pr_str
 import mal_types
 
+def prn(obj):
+    print(pr_str(obj, print_readably=True))
+    return mal_types.MalNil()
 
 ns = {
     '+': lambda a, b: mal_types.MalNumber(a.data + b.data), # fixme: operate and return maltypes directly
     '-': lambda a, b: mal_types.MalNumber(a.data - b.data),
     '*': lambda a, b: mal_types.MalNumber(a.data * b.data),
     '/': lambda a, b: mal_types.MalNumber((a.data / b.data)),
-    "prn": lambda x: pr_str(x, print_readably=True),
+    "prn": prn,
     "list": lambda *x: mal_types.MalList(x),
     "list?": lambda x: mal_types.MalBool(True if isinstance(x, mal_types.MalList) else False),
     "empty?": lambda x: mal_types.MalBool(len(x) == 0),

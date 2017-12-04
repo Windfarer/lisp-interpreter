@@ -15,7 +15,6 @@ def EVAL(ast, env):
         return ast
     elif isinstance(ast, mal_types.MalList):
         if isinstance(ast[0], mal_types.MalSymbol):
-
             if ast[0].data == 'def!':
                 value = EVAL(ast[2], env)
                 env.set(ast[1].data, value)
@@ -28,8 +27,10 @@ def EVAL(ast, env):
                 return EVAL(ast[2], let_env)
 
             elif ast[0].data == 'do':
+                # print(ast)
                 for item in ast[1:]:
                     ast = eval_ast(item, env)
+                    ast = EVAL(ast, env)
                 return ast
 
             elif ast[0].data == 'if':
