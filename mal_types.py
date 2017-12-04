@@ -133,6 +133,15 @@ class MalNil(MalType):
     def __len__(self):
         return 0
 
+class MalFn(MalType):
+    def __init__(self, ast, params, env, fn):
+        self.ast = ast
+        self.params = params
+        self.env = env
+        self.fn = fn
+
+    def __call__(self, *args, **kwargs):
+        return self.fn(*args, **kwargs)
 
 class MalException(Exception):
     pass
