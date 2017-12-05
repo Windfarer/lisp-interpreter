@@ -81,16 +81,20 @@ def PRINT(ast):
     return printer.pr_str(ast)
 
 
-def rep():
-    # repl_env = Env()
-    # for k, v in ns.items():
-    #     repl_env.set(k, v)
+def rep(input):
+    repl_env = Env()
+    for k, v in ns.items():
+        repl_env.set(k, v)
     # repl_env.set('eval', lambda ast: EVAL(ast, env))
     # repl_env.set('*ARGV*', EVAL())
     # repl_env
+    return PRINT(EVAL(READ(input), repl_env))
+
+
+def main():
     while True:
         try:
-            print(PRINT(EVAL(READ(input("user> ")), repl_env)))
+            print(rep(input("user> ")))
         except mal_types.MalException as e:
             # raise e
             print(e)
@@ -99,4 +103,4 @@ def rep():
             print(e)
 
 if __name__ == '__main__':
-    rep()
+    main()
