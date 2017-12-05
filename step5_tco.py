@@ -52,11 +52,14 @@ def EVAL(ast, env):
                     return mal_types.MalFn(ast=ast[2], params=ast[1], env=env, fn=fn)
             evaluated_ast = eval_ast(ast, env)
             if callable(evaluated_ast[0]):
-                if isinstance(evaluated_ast, mal_types.MalFn):
-                    new_env = Env(outer=evaluated_ast.env, binds=evaluated_ast.params, exprs=evaluated_ast[1:])
-                    env = new_env
+                f, args = evaluated_ast[0], evaluated_ast[1:]
+                if isinstance(f, mal_types.MalFn):
+                    ast= f.ast
+                    env = Env(outer=f.env, binds=f.params, exprs=args)
+                    # print(f)
+                    continue
                 else:
-                    return evaluated_ast[0](*evaluated_ast[1:])  # apply
+                    return f(*args)  # apply
             return evaluated_ast
         return mal_types.MalNil()
 
@@ -91,7 +94,6 @@ def rep():
         except Exception as e:
             # raise e
             print(e)
-
 
 if __name__ == '__main__':
     rep()
