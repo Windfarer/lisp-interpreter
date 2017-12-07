@@ -4,6 +4,10 @@ import mal_types
 from env import Env
 from core import ns
 
+repl_env = Env()
+for k, v in ns.items():
+    repl_env.set(k, v)
+
 def READ(string):
     return reader.read_str(string)
 
@@ -50,6 +54,10 @@ def EVAL(ast, env):
                         new_env = Env(outer=env, binds=ast[1], exprs=exprs)
                         return EVAL(ast[2], new_env)
                     return mal_types.MalFn(ast=ast[2], params=ast[1], env=env, fn=fn)
+
+                elif ast[0].data == 'eval':
+                    return lambda ast: EVAL(ast[1:], repl_env)
+
             evaluated_ast = eval_ast(ast, env)
             if callable(evaluated_ast[0]):
                 f, args = evaluated_ast[0], evaluated_ast[1:]
@@ -82,16 +90,11 @@ def PRINT(ast):
 
 
 def rep(input):
-    repl_env = Env()
-    for k, v in ns.items():
-        repl_env.set(k, v)
-    # repl_env.set('eval', lambda ast: EVAL(ast, env))
-    # repl_env.set('*ARGV*', EVAL())
-    # repl_env
     return PRINT(EVAL(READ(input), repl_env))
 
 
 def main():
+    rep('"(def! load-file (fn* (f) (eval (read-string (str"(do" (slurp f) ")")))))"')
     while True:
         try:
             print(rep(input("user> ")))

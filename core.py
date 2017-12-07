@@ -7,11 +7,17 @@ def prn(obj):
     print(pr_str(obj, print_readably=True))
     return mal_types.MalNil()
 
-def read_string():
-    pass  # todo
+def read_string(string):
+    if isinstance(string, mal_types.MalString):
+        string = string.data
+    return read_str(string)
 
-def slurp():
-    pass  # todo
+def slurp(filename):
+    if isinstance(filename, mal_types.MalString):
+        filename = filename.data
+    with open(filename) as f:
+        file_content = f.read()
+    return mal_types.MalString(file_content)
 
 def atom():
     pass
@@ -43,6 +49,7 @@ ns = {
     "<=": lambda x,y: mal_types.MalBool(x.data<=y.data),
     ">": lambda x,y: mal_types.MalBool(x.data>y.data),
     ">=": lambda x,y: mal_types.MalBool(x.data>=y.data),
+
     "read-string": read_string,
     "slurp": slurp,
 
