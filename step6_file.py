@@ -77,7 +77,7 @@ def eval_ast(ast, env):
             raise mal_types.MalException("'{}' not found.".format(ast.data))
         return v
 
-    elif isinstance(ast, mal_types.MalList) or isinstance(ast, list):
+    elif isinstance(ast, mal_types.MalList):
         return mal_types.MalList([EVAL(i, env) for i in ast])
     return ast
 
