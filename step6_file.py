@@ -33,7 +33,7 @@ def EVAL(ast, env):
                     continue
 
                 elif ast[0].data == 'do':
-                    ast = eval_ast(ast[1:-1], env)[-1]
+                    ast = eval_ast(ast[1:], env)[-1]
                     continue
 
                 elif ast[0].data == 'if':
@@ -55,6 +55,7 @@ def EVAL(ast, env):
                 elif ast[0].data == 'eval':
                     return lambda ast: EVAL(ast[1:], repl_env)
 
+            # apply
             evaluated_ast = eval_ast(ast, env)
             if callable(evaluated_ast[0]):
                 f, args = evaluated_ast[0], evaluated_ast[1:]
@@ -64,7 +65,7 @@ def EVAL(ast, env):
                     # print(f)
                     continue
                 else:
-                    return f(*args)  # apply
+                    return f(*args)
             return evaluated_ast
         return mal_types.MalNil()
 

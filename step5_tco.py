@@ -29,7 +29,7 @@ def EVAL(ast, env):
                     continue
 
                 elif ast[0].data == 'do':
-                    ast = eval_ast(ast[1:-1], env)[-1]
+                    ast = eval_ast(ast[1:], env)[-1]
                     continue
 
                 elif ast[0].data == 'if':
