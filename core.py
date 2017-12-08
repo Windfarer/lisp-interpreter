@@ -3,8 +3,8 @@ from reader import read_str
 import mal_types
 
 
-def prn(obj):
-    print(pr_str(obj, print_readably=True))
+def prn(*args):
+    print(" ".join([pr_str(i, print_readably=True) for i in args]))
     return mal_types.MalNil()
 
 def read_string(string):
@@ -34,12 +34,16 @@ def reset():
 def swap():
     pass
 
+def println(args):
+    print(" ".join([pr_str(i, print_readably=False) for i in args]))
+    return mal_types.MalNil()
+
 ns = {
     '+': lambda a, b: mal_types.MalNumber(a.data + b.data), # fixme: operate and return maltypes directly
     '-': lambda a, b: mal_types.MalNumber(a.data - b.data),
     '*': lambda a, b: mal_types.MalNumber(a.data * b.data),
     '/': lambda a, b: mal_types.MalNumber((a.data / b.data)),
-    "prn": prn,
+
     "list": lambda *x: mal_types.MalList(x),
     "list?": lambda x: mal_types.MalBool(True if isinstance(x, mal_types.MalList) else False),
     "empty?": lambda x: mal_types.MalBool(len(x) == 0),
@@ -49,6 +53,11 @@ ns = {
     "<=": lambda x,y: mal_types.MalBool(x.data<=y.data),
     ">": lambda x,y: mal_types.MalBool(x.data>y.data),
     ">=": lambda x,y: mal_types.MalBool(x.data>=y.data),
+    "pr-str": lambda *args: " ".join([pr_str(i, print_readably=True) for i in args]),
+    "str": lambda *args: " ".join([pr_str(i, print_readably=False) for i in args]),
+    "prn": prn,
+    "println": println,
+
 
     "read-string": read_string,
     "slurp": slurp,
