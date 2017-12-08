@@ -15,6 +15,8 @@ def EVAL(ast, env):
         elif not ast:
             return ast
         elif isinstance(ast, mal_types.MalList):
+            if len(ast) == 0:
+                return ast
             if isinstance(ast[0], mal_types.MalSymbol):
                 if ast[0].data == 'def!':
                     value = EVAL(ast[2], env)

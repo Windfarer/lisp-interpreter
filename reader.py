@@ -6,7 +6,7 @@ _mal_token_pattern = re.compile(r'''[\s,]*(~@|[\[\]{}()'`~^@]|"(?:\\.|[^\\"])*"|
 _p_mapping = {
     '(': ')',
     '[': ']',
-    '{': '}'
+    '{': '}',
 }
 
 _quote_mapping = {
@@ -39,13 +39,12 @@ class Reader(object):
 
 
 def read_list(reader):
-    first_token = reader.peek()
     result = mal_types.MalList()
     error = False
     reader.next()
     while True:
         token = read_form(reader)
-        if token in _p_mapping and token != '}':
+        if token in _p_mapping and token != ')':
             error = True
             break
         if token is None:
@@ -59,7 +58,7 @@ def read_list(reader):
     if error:
         if token is None:
             token = 'EOF'
-        raise mal_types.MalException("expected '{}', got {}".format('}', token))
+        raise mal_types.MalException("expected '{}', got {}".format(')', token))
     # print(result.data)
     return result
 

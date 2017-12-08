@@ -20,6 +20,8 @@ def rep():
             print(PRINT(EVAL(READ(input("user> ")))))
         except MalException as e:
             print(e)
-
+        except Exception as e:
+            # raise e
+            print(e)
 if __name__ == '__main__':
     rep()

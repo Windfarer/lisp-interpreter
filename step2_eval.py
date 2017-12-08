@@ -14,11 +14,9 @@ def EVAL(ast, env):
         return ast
     elif isinstance(ast, mal_types.MalList):
         ast = eval_ast(ast, env)
-        if callable(ast[0]):
+        if len(ast) > 0 and callable(ast[0]):
             return ast[0](*ast[1:])
-        else:
-            return ast
-    return ast.data
+    return ast
 
 
 def eval_ast(ast, env):
@@ -47,6 +45,9 @@ def rep():
         try:
             print(PRINT(EVAL(READ(input("user> ")), repl_env)))
         except mal_types.MalException as e:
+            print(e)
+        except Exception as e:
+            raise e
             print(e)
 
 

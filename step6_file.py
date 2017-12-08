@@ -5,6 +5,7 @@ from env import Env
 from core import ns
 
 repl_env = Env()
+repl_env.set('eval', lambda ast: EVAL(ast, repl_env))
 for k, v in ns.items():
     repl_env.set(k, v)
 
@@ -19,6 +20,8 @@ def EVAL(ast, env):
         elif not ast:
             return ast
         elif isinstance(ast, mal_types.MalList):
+            if len(ast) == 0:
+                return ast
             if isinstance(ast[0], mal_types.MalSymbol):
                 if ast[0].data == 'def!':
                     value = EVAL(ast[2], env)
@@ -51,9 +54,6 @@ def EVAL(ast, env):
                         new_env = Env(outer=env, binds=ast[1], exprs=exprs)
                         return EVAL(ast[2], new_env)
                     return mal_types.MalFn(ast=ast[2], params=ast[1], env=env, fn=fn)
-
-                elif ast[0].data == 'eval':
-                    return lambda ast: EVAL(ast[1:], repl_env)
 
             # apply
             evaluated_ast = eval_ast(ast, env)
@@ -92,15 +92,15 @@ def rep(input):
 
 
 def main():
-    rep('"(def! load-file (fn* (f) (eval (read-string (str"(do" (slurp f) ")")))))"')
+    print(rep('(def! load-file (fn* (f) (eval (read-string (str"(do" (slurp f) ")")))))'))
     while True:
         try:
             print(rep(input("user> ")))
         except mal_types.MalException as e:
-            # raise e
+            raise e
             print(e)
         except Exception as e:
-            # raise e
+            raise e
             print(e)
 
 if __name__ == '__main__':

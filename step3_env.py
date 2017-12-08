@@ -14,6 +14,8 @@ def EVAL(ast, env):
     elif not ast:
         return ast
     elif isinstance(ast, mal_types.MalList):
+        if len(ast) == 0:
+            return ast
         if isinstance(ast[0], mal_types.MalSymbol) and ast[0].data == 'def!':
             value = EVAL(ast[2], env)
             env.set(ast[1].data, value)
@@ -57,7 +59,9 @@ def rep():
             print(PRINT(EVAL(READ(input("user> ")), repl_env)))
         except mal_types.MalException as e:
             print(e)
-
+        except Exception as e:
+            # raise e
+            print(e)
 
 if __name__ == '__main__':
     rep()
