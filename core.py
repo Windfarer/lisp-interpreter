@@ -7,6 +7,11 @@ def prn(*args):
     print(" ".join([pr_str(i, print_readably=True) for i in args]))
     return mal_types.MalNil()
 
+def println(args):
+    print(" ".join([pr_str(i, print_readably=False) for i in args]))
+    return mal_types.MalNil()
+
+
 def read_string(string):
     if isinstance(string, mal_types.MalString):
         string = string.data
@@ -34,10 +39,6 @@ def reset():
 def swap():
     pass
 
-def println(args):
-    print(" ".join([pr_str(i, print_readably=False) for i in args]))
-    return mal_types.MalNil()
-
 ns = {
     '+': lambda a, b: mal_types.MalNumber(a.data + b.data), # fixme: operate and return maltypes directly
     '-': lambda a, b: mal_types.MalNumber(a.data - b.data),
@@ -53,8 +54,8 @@ ns = {
     "<=": lambda x,y: mal_types.MalBool(x.data<=y.data),
     ">": lambda x,y: mal_types.MalBool(x.data>y.data),
     ">=": lambda x,y: mal_types.MalBool(x.data>=y.data),
-    "pr-str": lambda *args: " ".join([pr_str(i, print_readably=True) for i in args]),
-    "str": lambda *args: " ".join([pr_str(i, print_readably=False) for i in args]),
+    "pr-str": lambda *args: mal_types.MalString(" ".join([pr_str(i, print_readably=True) for i in args])),
+    "str": lambda *args: mal_types.MalString(" ".join([pr_str(i, print_readably=False) for i in args])),
     "prn": prn,
     "println": println,
 

@@ -9,6 +9,7 @@ def READ(string):
 
 
 def EVAL(ast, env):
+    # print('EVAL', ast)
     if not isinstance(ast, mal_types.MalList):
         return eval_ast(ast, env)
     elif not ast:
@@ -54,7 +55,7 @@ def EVAL(ast, env):
 
 
 def eval_ast(ast, env):
-    # print('find', ast)
+    # print('eval_ast', type(ast))
     if isinstance(ast, mal_types.MalSymbol):
         v = env.get(ast)
         if not v:
