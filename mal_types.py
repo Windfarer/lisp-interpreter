@@ -143,6 +143,9 @@ class MalFn(MalType):
     def __call__(self, *args, **kwargs):
         return self.fn(*args, **kwargs)
 
+class MalAtom(MalType):
+    pass
+
 class MalException(Exception):
     pass
 

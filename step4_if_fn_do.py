@@ -27,10 +27,7 @@ def EVAL(ast, env):
                 return EVAL(ast[2], let_env)
 
             elif ast[0].data == 'do':
-                # print(ast)
-                for item in ast[1:]:
-                    ast = EVAL(item, env)
-                return ast
+                return eval_ast(ast[1:], env)[-1] # fixme
 
             elif ast[0].data == 'if':
                 if EVAL(ast[1], env):
@@ -61,8 +58,7 @@ def eval_ast(ast, env):
         if not v:
             raise mal_types.MalException("'{}' not found.".format(ast.data))
         return v
-
-    elif isinstance(ast, mal_types.MalList):
+    elif isinstance(ast, mal_types.MalList) or isinstance(ast, list): # fixme
         return mal_types.MalList([EVAL(i, env) for i in ast])
     return ast
 
