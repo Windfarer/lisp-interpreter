@@ -3,6 +3,7 @@ import printer
 import mal_types
 from env import Env
 from core import ns
+import sys
 
 repl_env = Env()
 repl_env.set('eval', lambda ast: EVAL(ast, repl_env))
@@ -92,7 +93,8 @@ def rep(input):
 
 
 def main():
-    print(rep('(def! load-file (fn* (f) (eval (read-string (str"(do" (slurp f) ")")))))'))
+    rep('(def! load-file (fn* (f) (eval (read-string (str "(do " (slurp f) ")")))))')
+    repl_env.set("*ARGV*", mal_types.MalList(sys.argv[1:]))
     while True:
         try:
             print(rep(input("user> ")))

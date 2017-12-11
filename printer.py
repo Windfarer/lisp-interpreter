@@ -2,6 +2,8 @@ import mal_types
 
 def pr_str(obj, print_readably=True):
     if isinstance(obj, mal_types.MalString):
+        if print_readably is False:
+            return str(obj)
         rv = '"{}"'.format(obj)
     elif callable(obj):
         rv = '#<function>'
@@ -17,7 +19,8 @@ def pr_str(obj, print_readably=True):
         rv = '{{}}'.format(" ".join(l))
     else:
         rv = str(obj)
-    if print_readably:
-        return rv
-    else:
-        return repr(rv)[1:-1]
+    return rv
+    # if print_readably:
+    #     return rv
+    # else:
+    #     return repr(rv)[1:-1]

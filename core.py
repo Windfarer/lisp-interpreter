@@ -21,7 +21,7 @@ def slurp(filename):
     if isinstance(filename, mal_types.MalString):
         filename = filename.data
     with open(filename, 'rt') as f:
-        file_content = repr(f.read())[1:-1]
+        file_content = f.read()  # break step 6 read text test, but seems no effect
     return mal_types.MalString(file_content)
 
 def atom():
