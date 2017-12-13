@@ -5,6 +5,7 @@ from env import Env
 from core import ns
 import sys
 
+
 repl_env = Env()
 repl_env.set('eval', lambda ast: EVAL(ast, repl_env))
 for k, v in ns.items():

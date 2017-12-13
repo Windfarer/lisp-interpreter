@@ -24,20 +24,22 @@ def slurp(filename):
         file_content = f.read()  # break step 6 read text test, but seems no effect
     return mal_types.MalString(file_content)
 
-def atom():
-    pass
+def atom(obj):
+    return mal_types.MalAtom(ref=obj)
 
-def is_atom():
-    pass
+def is_atom(obj):
+    return mal_types.MalBool(isinstance(obj, mal_types.MalAtom))
 
-def deref():
-    pass
+def deref(obj):
+    return obj.ref
 
-def reset():
-    pass
+def reset(atom, value):
+    atom.ref = value
+    return atom.ref
 
-def swap():
-    pass
+def swap(atom, func, *args):
+    atom.ref = func(atom, *args)
+    return atom.ref
 
 ns = {
     '+': lambda a, b: mal_types.MalNumber(a.data + b.data), # fixme: operate and return maltypes directly
