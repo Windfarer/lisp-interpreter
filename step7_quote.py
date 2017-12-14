@@ -11,6 +11,23 @@ repl_env.set('eval', lambda ast: EVAL(ast, repl_env))
 for k, v in ns.items():
     repl_env.set(k, v)
 
+
+def is_pair(ast):
+    if isinstance(ast, mal_types.MalList) and len(ast.data) > 0:
+        return True
+    return False
+
+
+def quasiquote(ast):
+    if not is_pair(ast):
+        return mal_types.MalList([mal_types.MalSymbol('quote'), ast])
+    elif ast[0].data == 'unquote':
+        return ast[1]
+    elif isinstance(ast[0], mal_types.MalList) and isinstance(ast[0][0], mal_types.MalSymbol) and ast[0][0].data == 'splice-unquote':
+        return mal_types.MalList([mal_types.MalSymbol('concat'), ast[0][1], quasiquote(ast[1:])])
+    else:
+        return mal_types.MalList([mal_types.MalSymbol('cons'), ast[0], quasiquote(ast[1:])])
+
 def READ(string):
     return reader.read_str(string)
 
@@ -57,6 +74,12 @@ def EVAL(ast, env):
                         return EVAL(ast[2], new_env)
                     return mal_types.MalFn(ast=ast[2], params=ast[1], env=env, fn=fn)
 
+                elif ast[0].data == 'quote':
+                    return ast[1]
+
+                elif ast[0].data == 'quasiquote':
+                    ast = quasiquote(ast[1])
+                    continue
             # apply
             evaluated_ast = eval_ast(ast, env)
             if callable(evaluated_ast[0]):
