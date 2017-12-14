@@ -25,7 +25,8 @@ def slurp(filename):
     return mal_types.MalString(file_content)
 
 def atom(obj):
-    return mal_types.MalAtom(ref=obj)
+    rv = mal_types.MalAtom(ref=obj)
+    return rv
 
 def is_atom(obj):
     return mal_types.MalBool(isinstance(obj, mal_types.MalAtom))
@@ -38,7 +39,7 @@ def reset(atom, value):
     return atom.ref
 
 def swap(atom, func, *args):
-    atom.ref = func(atom, *args)
+    atom.ref = func(atom.ref, *args)
     return atom.ref
 
 ns = {

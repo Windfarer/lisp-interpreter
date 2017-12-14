@@ -7,6 +7,8 @@ def pr_str(obj, print_readably=True):
         rv = '"{}"'.format(obj)
     elif callable(obj):
         rv = '#<function>'
+    elif isinstance(obj, mal_types.MalAtom):
+        rv = "(atom {})".format(pr_str(obj.ref))
     elif isinstance(obj, mal_types.MalList):
         rv = '({})'.format(" ".join([pr_str(i) for i in obj]))
     elif isinstance(obj, mal_types.MalVector):
