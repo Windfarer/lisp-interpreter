@@ -28,7 +28,7 @@ class MalList(MalType):
             data = []
         if isinstance(data, MalList):
             data = data.data
-        self.data = data
+        self.data = list(data)
 
     def __iter__(self):
         return self.data.__iter__()

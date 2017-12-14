@@ -43,11 +43,11 @@ def swap(atom, func, *args):
     return atom.ref
 
 def cons(obj, lst):
-    print(lst)
-    lst.data.insert(0, obj)
-    return lst
+    rv = mal_types.MalList([obj])
+    rv.data.extend(lst.data)
+    return rv
 
-def concat(lsts):
+def concat(*lsts):
     rv = mal_types.MalList()
     for l in lsts:
         rv.data.extend(l)
@@ -59,7 +59,7 @@ ns = {
     '*': lambda a, b: mal_types.MalNumber(a.data * b.data),
     '/': lambda a, b: mal_types.MalNumber((a.data / b.data)),
 
-    "list": lambda *x: mal_types.MalList(x),
+    "list": lambda *x: mal_types.MalList(list(x)),
     "list?": lambda x: mal_types.MalBool(True if isinstance(x, mal_types.MalList) else False),
     "empty?": lambda x: mal_types.MalBool(len(x) == 0),
     "count": lambda x: mal_types.MalNumber(len(x)),
