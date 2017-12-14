@@ -42,6 +42,17 @@ def swap(atom, func, *args):
     atom.ref = func(atom.ref, *args)
     return atom.ref
 
+def cons(obj, lst):
+    print(lst)
+    lst.data.insert(0, obj)
+    return lst
+
+def concat(lsts):
+    rv = mal_types.MalList()
+    for l in lsts:
+        rv.data.extend(l)
+    return rv
+
 ns = {
     '+': lambda a, b: mal_types.MalNumber(a.data + b.data), # fixme: operate and return maltypes directly
     '-': lambda a, b: mal_types.MalNumber(a.data - b.data),
@@ -71,4 +82,7 @@ ns = {
     "deref": deref,
     "reset!": reset,
     "swap!": swap,
+
+    "cons": cons,
+    "concat": concat,
 }
