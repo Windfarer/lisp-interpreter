@@ -102,7 +102,6 @@ class MalString(MalType):
     def __init__(self, data):
         self.data = str(data)
 
-
 class MalKeyword(MalType):
     def __init__(self, data):
         self.data = str(data)

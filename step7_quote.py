@@ -26,7 +26,7 @@ def quasiquote(ast):
     elif isinstance(ast[0], mal_types.MalList) and isinstance(ast[0][0], mal_types.MalSymbol) and ast[0][0].data == 'splice-unquote':
         return mal_types.MalList([mal_types.MalSymbol('concat'), ast[0][1], quasiquote(ast[1:])])
     else:
-        return mal_types.MalList([mal_types.MalSymbol('cons'), ast[0], quasiquote(ast[1:])])
+        return mal_types.MalList([mal_types.MalSymbol('cons'), quasiquote(ast[0]), quasiquote(ast[1:])])
 
 def READ(string):
     return reader.read_str(string)
@@ -80,6 +80,7 @@ def EVAL(ast, env):
                 elif ast[0].data == 'quasiquote':
                     ast = quasiquote(ast[1])
                     continue
+
             # apply
             evaluated_ast = eval_ast(ast, env)
             if callable(evaluated_ast[0]):
