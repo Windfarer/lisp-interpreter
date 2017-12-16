@@ -140,6 +140,7 @@ class MalFn(MalType):
         self.params = params
         self.env = env
         self.fn = fn
+        self.is_macro = False
 
     def __call__(self, *args, **kwargs):
         return self.fn(*args, **kwargs)
