@@ -155,7 +155,7 @@ def main():
         try:
             print(rep(input("user> ")))
         except mal_types.MalException as e:
-            raise e
+            # raise e
             print(e)
         except Exception as e:
             raise e

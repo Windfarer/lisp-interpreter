@@ -74,22 +74,34 @@ def read_atom(reader):
     if token in _quote_mapping:
         reader.next()
         return mal_types.MalList([_quote_mapping[token], read_form(reader)])
-    if token == '^':
+    elif token == '^':
         reader.next()
         meta_data = read_form(reader)
         reader.next()
         lst = read_form(reader)
         return mal_types.MalList(["with-meta", lst, meta_data])
-    if token.startswith('"') and token.endswith('"'):
+    elif token.startswith('"') and token.endswith('"'):
         return mal_types.MalString(token[1:-1])
-    if token.startswith(":"):
+    elif token.startswith(":"):
         return mal_types.MalKeyword(token)
-    if token in ('true', 'false'):
+    elif token in ('true', 'false'):
         if token == 'true':
             return mal_types.MalBool(True)
         return mal_types.MalBool(False)
-    if token == 'nil':
+    elif token == 'nil':
         return mal_types.MalNil()
+    elif token == "'":
+        reader.next()
+        return mal_types.MalList([mal_types.MalSymbol('quote'), read_form(reader)])
+    elif token == "`":
+        reader.next()
+        return mal_types.MalList([mal_types.MalSymbol('quasiquote'), read_form(reader)])
+    elif token == "~":
+        reader.next()
+        return mal_types.MalList([mal_types.MalSymbol('unquote'), read_form(reader)])
+    elif token == "~@":
+        reader.next()
+        return mal_types.MalList([mal_types.MalSymbol('splice-unquote'), read_form(reader)])
     return mal_types.MalSymbol(token)  # symbol?
 
 
