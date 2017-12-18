@@ -4,6 +4,13 @@ import mal_types
 from env import Env
 from core import ns
 
+
+repl_env = Env()
+repl_env.set('eval', lambda ast: EVAL(ast, repl_env))
+for k, v in ns.items():
+    repl_env.set(k, v)
+
+
 def READ(string):
     return reader.read_str(string)
 
@@ -80,13 +87,16 @@ def PRINT(ast):
     return printer.pr_str(ast)
 
 
-def rep():
-    repl_env = Env()
-    for k, v in ns.items():
-        repl_env.set(k, v)
+def rep(input):
+    return PRINT(EVAL(READ(input), repl_env))
+
+
+def main():
+    rep("(def! not (fn* (a) (if a false true)))")
+
     while True:
         try:
-            print(PRINT(EVAL(READ(input("user> ")), repl_env)))
+            print(rep(input("user> ")))
         except mal_types.MalException as e:
             # raise e
             print(e)
@@ -94,5 +104,6 @@ def rep():
             # raise e
             print(e)
 
+
 if __name__ == '__main__':
-    rep()
+    main()

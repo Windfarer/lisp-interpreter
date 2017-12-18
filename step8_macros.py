@@ -42,6 +42,7 @@ def is_macro_call(ast, env):
 
 def macroexpand(ast, env):
     while is_macro_call(ast, env):
+        print(ast)
         f = env.get(ast[0])
         ast = f(*ast[1:])
     return ast
@@ -155,7 +156,7 @@ def main():
         try:
             print(rep(input("user> ")))
         except mal_types.MalException as e:
-            # raise e
+            raise e
             print(e)
         except Exception as e:
             raise e
