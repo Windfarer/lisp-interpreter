@@ -43,7 +43,7 @@ def is_macro_call(ast, env):
 def macroexpand(ast, env):
     while is_macro_call(ast, env):
         f = env.get(ast[0])
-        ast = f(ast[1:])
+        ast = f(*ast[1:])
     return ast
 
 def READ(string):
