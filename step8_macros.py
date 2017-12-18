@@ -30,16 +30,21 @@ def quasiquote(ast):
 
 
 def is_macro_call(ast, env):
-    if isinstance(ast[0], mal_types.MalSymbol):
-        f = env.get(ast[0])
-        if f and f.is_macro:
+    if isinstance(ast, mal_types.MalList) and isinstance(ast[0], mal_types.MalSymbol):
+        try:
+            f = env.get(ast[0])
+        except mal_types.MalException:
+            f = None
+        if isinstance(f, mal_types.MalFn) and f.is_macro:
             return True
     return False
 
 
 def macroexpand(ast, env):
-    pass  # todo
-
+    while is_macro_call(ast, env):
+        f = env.get(ast[0])
+        ast = f(ast[1:])
+    return ast
 
 def READ(string):
     return reader.read_str(string)
@@ -54,7 +59,13 @@ def EVAL(ast, env):
         elif isinstance(ast, mal_types.MalList):
             if len(ast) == 0:
                 return ast
+            ast = macroexpand(ast, env)
+            if not isinstance(ast, mal_types.MalList):
+                return eval_ast(ast, env)
             if isinstance(ast[0], mal_types.MalSymbol):
+                if ast[0].data == 'macroexpand':
+                    return macroexpand(ast[1], env)
+
                 if ast[0].data == 'def!':
                     value = EVAL(ast[2], env)
                     env.set(ast[1].data, value)
@@ -137,16 +148,17 @@ def rep(input):
 
 
 def main():
+    rep("(def! not (fn* (a) (if a false true)))")
     rep('(def! load-file (fn* (f) (eval (read-string (str "(do " (slurp f) ")")))))')
     repl_env.set("*ARGV*", mal_types.MalList(sys.argv[1:]))
     while True:
         try:
             print(rep(input("user> ")))
         except mal_types.MalException as e:
-            # raise e
+            raise e
             print(e)
         except Exception as e:
-            # raise e
+            raise e
             print(e)
 
 if __name__ == '__main__':
