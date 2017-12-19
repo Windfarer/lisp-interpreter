@@ -9,11 +9,11 @@ class Env(object):
             binds = []
         if exprs is None:
             exprs = []
-        for i, (bind, expr) in enumerate(zip(binds, exprs)):
+        for i, bind in enumerate(binds):
             if bind == '&' or (isinstance(bind, MalSymbol) and bind.data == '&'):
                 self.set(binds[i+1], MalList(exprs[i:]))
                 return
-            self.set(bind, expr)
+            self.set(bind, exprs[i])
 
     def set(self, key, value):
         if isinstance(key, MalSymbol):
