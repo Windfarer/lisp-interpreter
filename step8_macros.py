@@ -42,7 +42,7 @@ def is_macro_call(ast, env):
 
 def macroexpand(ast, env):
     while is_macro_call(ast, env):
-        print(ast)
+        # print(ast)
         f = env.get(ast[0])
         ast = f(*ast[1:])
     return ast
@@ -151,15 +151,17 @@ def rep(input):
 def main():
     rep("(def! not (fn* (a) (if a false true)))")
     rep('(def! load-file (fn* (f) (eval (read-string (str "(do " (slurp f) ")")))))')
+    rep("""(defmacro! cond (fn* (& xs) (if (> (count xs) 0) (list'if (first xs) (if (> (count xs) 1) (nth xs 1) (throw "odd number of forms to cond")) (cons'cond (rest (rest xs)))))))""")
+    rep("""(defmacro! or (fn* (& xs) (if (empty? xs) nil (if (= 1 (count xs)) (first xs) `(let* (or_FIXME ~(first xs)) (if or_FIXME or_FIXME (or ~@(rest xs))))))))""")
     repl_env.set("*ARGV*", mal_types.MalList(sys.argv[1:]))
     while True:
         try:
             print(rep(input("user> ")))
         except mal_types.MalException as e:
-            raise e
+            # raise e
             print(e)
         except Exception as e:
-            raise e
+            # raise e
             print(e)
 
 if __name__ == '__main__':

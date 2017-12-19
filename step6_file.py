@@ -94,6 +94,7 @@ def rep(input):
 
 
 def main():
+    rep("(def! not (fn* (a) (if a false true)))")
     rep('(def! load-file (fn* (f) (eval (read-string (str "(do " (slurp f) ")")))))')
     repl_env.set("*ARGV*", mal_types.MalList(sys.argv[1:]))
     while True:

@@ -1,4 +1,4 @@
-from mal_types import MalException, MalSymbol
+from mal_types import MalException, MalSymbol, MalList
 
 
 class Env(object):
@@ -9,7 +9,10 @@ class Env(object):
             binds = []
         if exprs is None:
             exprs = []
-        for bind, expr in zip(binds, exprs):
+        for i, (bind, expr) in enumerate(zip(binds, exprs)):
+            if bind == '&' or (isinstance(bind, MalSymbol) and bind.data == '&'):
+                self.set(binds[i+1], MalList(exprs[i:]))
+                return
             self.set(bind, expr)
 
     def set(self, key, value):

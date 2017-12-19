@@ -58,6 +58,11 @@ def equal(a, b):
         return mal_types.MalBool(False)
     return mal_types.MalBool(a.data==b.data)
 
+def is_list(x):
+    if isinstance(x, mal_types.MalList):
+        return mal_types.MalBool(True)
+    return mal_types.MalBool(False)
+
 ns = {
     '+': lambda a, b: mal_types.MalNumber(a.data + b.data), # fixme: operate and return maltypes directly
     '-': lambda a, b: mal_types.MalNumber(a.data - b.data),
@@ -65,7 +70,7 @@ ns = {
     '/': lambda a, b: mal_types.MalNumber((a.data / b.data)),
 
     "list": lambda *x: mal_types.MalList(list(x)),
-    "list?": lambda x: mal_types.MalBool(True if isinstance(x, mal_types.MalList) else False),
+    "list?": is_list,
     "empty?": lambda x: mal_types.MalBool(len(x) == 0),
     "count": lambda x: mal_types.MalNumber(len(x)),
     "=": equal,
