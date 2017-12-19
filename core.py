@@ -63,6 +63,25 @@ def is_list(x):
         return mal_types.MalBool(True)
     return mal_types.MalBool(False)
 
+def nth(lst, n):
+    if isinstance(n, mal_types.MalNumber):
+        n = n.data
+    try:
+        return lst[n]
+    except IndexError:
+        raise mal_types.MalException("xxx")
+
+
+def first(lst):
+    if isinstance(lst, mal_types.MalNil) or len(lst) == 0:
+        return mal_types.MalNil()
+    return lst[0]
+
+def rest(lst):
+    if isinstance(lst, mal_types.MalNil):
+        return mal_types.MalList()
+    return mal_types.MalList(lst[1:])
+
 ns = {
     '+': lambda a, b: mal_types.MalNumber(a.data + b.data), # fixme: operate and return maltypes directly
     '-': lambda a, b: mal_types.MalNumber(a.data - b.data),
@@ -95,4 +114,8 @@ ns = {
 
     "cons": cons,
     "concat": concat,
+
+    "nth": nth,
+    "first": first,
+    "rest": rest,
 }

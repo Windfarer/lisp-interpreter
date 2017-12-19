@@ -11,6 +11,8 @@ def pr_str(obj, print_readably=True):
         rv = "(atom {})".format(pr_str(obj.ref))
     elif isinstance(obj, mal_types.MalList):
         rv = '({})'.format(" ".join([pr_str(i) for i in obj]))
+    elif isinstance(obj, mal_types.MalKeyword):
+        rv = obj.data
     elif isinstance(obj, mal_types.MalVector):
         rv = '[{}]'.format(" ".join([pr_str(i) for i in obj]))
     elif isinstance(obj, mal_types.MalHashMap):
