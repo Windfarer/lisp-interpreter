@@ -23,7 +23,9 @@ def quasiquote(ast):
         return mal_types.MalList([mal_types.MalSymbol('quote'), ast])
     elif ast[0].data == 'unquote':
         return ast[1]
-    elif isinstance(ast[0], mal_types.MalList) and isinstance(ast[0][0], mal_types.MalSymbol) and ast[0][0].data == 'splice-unquote':
+    elif isinstance(ast[0], mal_types.MalList) and \
+            isinstance(ast[0][0], mal_types.MalSymbol) and \
+            ast[0][0].data == 'splice-unquote':
         return mal_types.MalList([mal_types.MalSymbol('concat'), ast[0][1], quasiquote(ast[1:])])
     else:
         return mal_types.MalList([mal_types.MalSymbol('cons'), quasiquote(ast[0]), quasiquote(ast[1:])])
@@ -100,7 +102,7 @@ def eval_ast(ast, env):
     # print('find', ast)
     if isinstance(ast, mal_types.MalSymbol):
         v = env.get(ast)
-        if not v:
+        if v is None:
             raise mal_types.MalException("'{}' not found.".format(ast.data))
         return v
 
