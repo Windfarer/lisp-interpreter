@@ -35,7 +35,7 @@ def EVAL(ast, env):
 def eval_ast(ast, env):
     if isinstance(ast, mal_types.MalSymbol):
         v = env.get(ast.data)
-        if not v:
+        if v is None:
             raise mal_types.MalException("'{}' not found.".format(ast.data))
         return v
     elif isinstance(ast, mal_types.MalList):
