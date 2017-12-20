@@ -59,6 +59,7 @@ def read_list(reader, starting_token):
         reader.next()
     return result
 
+
 def read_hash_map(reader):
     result = mal_types.MalHashMap()
     reader.next()
@@ -66,8 +67,6 @@ def read_hash_map(reader):
         token = read_form(reader)
         if token in _list_ending_token:
             raise mal_types.MalException("expected '}', got {}".format(token))
-        if token == '':
-            break
         if token is None:
             raise mal_types.MalException("expected 'EOF', got {}".format(token))
         if token == '}':
@@ -75,8 +74,6 @@ def read_hash_map(reader):
         key = token
         reader.next()
         token = read_form(reader)
-        if token == '':
-            break
         if token in _list_ending_token:
             raise mal_types.MalException("expected '}', got {}".format(token))
         if token is None:
@@ -86,11 +83,11 @@ def read_hash_map(reader):
         value = token
         reader.next()
         result[key] = value
-    reader.next()
     return result
+
+
 def read_atom(reader):
     token = reader.peek()
-    # print(token)
     try:
         val = int(token)
         return mal_types.MalNumber(val)
@@ -120,15 +117,17 @@ def read_atom(reader):
 
 def read_form(reader):
     token = reader.peek()
-    # print('-', token)
+    # print('-',  type(token), token)
     if not token:  # "EOF" or None
         return token
     if token in _list_token_mapping:
         return read_list(reader, token)
     if token == '{':
         return read_hash_map(reader)
-    elif token in _list_token_mapping.values():
+    elif token in _list_ending_token:
         return token
+    elif token == '}':
+        return '}'
     return read_atom(reader)
 
 

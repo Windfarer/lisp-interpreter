@@ -27,17 +27,19 @@ def eval_ast(ast, env):
         return fn
     elif isinstance(ast, mal_types.MalList):
         return mal_types.MalList([EVAL(i, env) for i in ast])
-    return ast.data
+    return ast
 
 
 def PRINT(ast):
     return printer.pr_str(ast)
 
 
-repl_env = {'+': lambda a,b: a+b,
-            '-': lambda a,b: a-b,
-            '*': lambda a,b: a*b,
-            '/': lambda a,b: int(a/b)}
+repl_env = {
+    '+': lambda a, b: mal_types.MalNumber(a.data + b.data), # fixme: operate and return maltypes directly
+    '-': lambda a, b: mal_types.MalNumber(a.data - b.data),
+    '*': lambda a, b: mal_types.MalNumber(a.data * b.data),
+    '/': lambda a, b: mal_types.MalNumber((a.data / b.data)),
+}
 
 
 def rep():

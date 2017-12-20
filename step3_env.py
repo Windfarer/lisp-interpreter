@@ -40,7 +40,7 @@ def eval_ast(ast, env):
         return v
     elif isinstance(ast, mal_types.MalList):
         return mal_types.MalList([EVAL(i, env) for i in ast])
-    return ast.data
+    return ast
 
 
 def PRINT(ast):
@@ -49,10 +49,10 @@ def PRINT(ast):
 
 def rep():
     repl_env = Env()
-    repl_env.set('+', lambda a, b: a + b)
-    repl_env.set('-', lambda a, b: a - b)
-    repl_env.set('*', lambda a, b: a * b)
-    repl_env.set('/', lambda a, b: int(a / b))
+    repl_env.set('+', lambda a, b: mal_types.MalNumber(a.data + b.data)) # fixme: operate and return maltypes directly
+    repl_env.set('-', lambda a, b: mal_types.MalNumber(a.data - b.data))
+    repl_env.set('*', lambda a, b: mal_types.MalNumber(a.data * b.data))
+    repl_env.set('/', lambda a, b: mal_types.MalNumber((a.data / b.data)))
 
     while True:
         try:
