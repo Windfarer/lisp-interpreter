@@ -55,10 +55,12 @@ def concat(*lsts):
 
 def equal(a, b):
     if isinstance(a, mal_types.list_types) and isinstance(b, mal_types.list_types):
+        if len(a) != len(b):
+            return mal_types.MalBool(False)
         for x, y in zip(a, b):
-            if x != y:
+            if not equal(x, y):
                 return mal_types.MalBool(False)
-            return mal_types.MalBool(True)
+        return mal_types.MalBool(True)
     if type(a) != type(b):
         return mal_types.MalBool(False)
     return mal_types.MalBool(a.data==b.data)
