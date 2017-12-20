@@ -1,4 +1,5 @@
 from collections import OrderedDict
+from itertools import chain
 
 class MalType(object):
     data = None
@@ -63,10 +64,15 @@ class MalVector(MalType):
 class MalHashMap(MalType):
     def __init__(self, data=None):
         if not data:
-            data = OrderedDict()
-        if isinstance(data, MalHashMap):
-            data = data.data
-        self.data = OrderedDict(data)
+            self.data = OrderedDict()
+        elif isinstance(data, dict):
+            self.data = OrderedDict(data)
+        elif isinstance(data, MalHashMap):
+            self.data = data.data
+        elif isinstance(data, (MalList, MalVector, list)):
+            self.data = OrderedDict()
+            for k, v in zip(data[::2], data[1::2]):
+                self.data[k] = v
 
     def __iter__(self):
         return self.data.__iter__()
@@ -157,3 +163,4 @@ class MalAtom(MalType):
 class MalException(Exception):
     pass
 
+list_types = (MalList, MalVector)

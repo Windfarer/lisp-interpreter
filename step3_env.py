@@ -38,8 +38,11 @@ def eval_ast(ast, env):
         if v is None:
             raise mal_types.MalException("'{}' not found.".format(ast.data))
         return v
-    elif isinstance(ast, mal_types.MalList):
-        return mal_types.MalList([EVAL(i, env) for i in ast])
+    elif isinstance(ast, mal_types.list_types):
+        class_type = ast.__class__
+        return class_type([EVAL(i, env) for i in ast])
+    elif isinstance(ast, mal_types.MalHashMap):
+        return mal_types.MalHashMap({EVAL(k, env): EVAL(v, env) for k, v in ast.items()})
     return ast
 
 
