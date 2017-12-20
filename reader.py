@@ -3,10 +3,16 @@ import mal_types
 
 _mal_token_pattern = re.compile(r'''[\s,]*(~@|[\[\]{}()'`~^@]|"(?:\\.|[^\\"])*"|;.*|[^\s\[\]{}('"`,;)]*)''')
 
-_p_mapping = {
+_list_token_mapping = {
     '(': ')',
     '[': ']',
-    '{': '}',
+}
+
+_list_ending_token = (')', ']')
+
+_list_type_mapping = {
+    '(': mal_types.MalList,
+    '[': mal_types.MalVector,
 }
 
 _quote_mapping = {
@@ -38,31 +44,50 @@ class Reader(object):
         return self.tokens[self.position]
 
 
-def read_list(reader):
-    result = mal_types.MalList()
-    error = False
+def read_list(reader, starting_token):
+    result = _list_type_mapping[starting_token]()
     reader.next()
     while True:
         token = read_form(reader)
-        if token in _p_mapping and token != ')':
-            error = True
-            break
+        if token in _list_ending_token and token != _list_token_mapping[starting_token]:
+            raise mal_types.MalException("expected '{}', got {}".format(_list_token_mapping[starting_token], token))
         if token is None:
-            error = True
-            break
-        if token in _p_mapping.values():
+            raise mal_types.MalException("expected 'EOF', got {}".format(token))
+        if token in _list_ending_token:
             break
         result.append(token)
-        # print(token)
         reader.next()
-    if error:
-        if token is None:
-            token = 'EOF'
-        raise mal_types.MalException("expected '{}', got {}".format(')', token))
-    # print(result.data)
     return result
 
-
+def read_hash_map(reader):
+    result = mal_types.MalHashMap()
+    reader.next()
+    while True:
+        token = read_form(reader)
+        if token in _list_ending_token:
+            raise mal_types.MalException("expected '}', got {}".format(token))
+        if token == '':
+            break
+        if token is None:
+            raise mal_types.MalException("expected 'EOF', got {}".format(token))
+        if token == '}':
+            break
+        key = token
+        reader.next()
+        token = read_form(reader)
+        if token == '':
+            break
+        if token in _list_ending_token:
+            raise mal_types.MalException("expected '}', got {}".format(token))
+        if token is None:
+            raise mal_types.MalException("expected 'EOF', got {}".format(token))
+        if token == '}':
+            break
+        value = token
+        reader.next()
+        result[key] = value
+    reader.next()
+    return result
 def read_atom(reader):
     token = reader.peek()
     # print(token)
@@ -98,9 +123,11 @@ def read_form(reader):
     # print('-', token)
     if not token:  # "EOF" or None
         return token
-    if token in _p_mapping:
-        return read_list(reader)
-    elif token in _p_mapping.values():
+    if token in _list_token_mapping:
+        return read_list(reader, token)
+    if token == '{':
+        return read_hash_map(reader)
+    elif token in _list_token_mapping.values():
         return token
     return read_atom(reader)
 

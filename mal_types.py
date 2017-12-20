@@ -74,6 +74,11 @@ class MalHashMap(MalType):
     def __getitem__(self, key):
         return self.data.__getitem__(key)
 
+    def __setitem__(self, key, value):
+        return self.data.__setitem__(key, value)
+
+    def items(self):
+        return self.data.items()
 
 class MalNumber(MalType):
     def __init__(self, data):

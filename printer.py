@@ -17,10 +17,11 @@ def pr_str(obj, print_readably=True):
         rv = '[{}]'.format(" ".join([pr_str(i) for i in obj]))
     elif isinstance(obj, mal_types.MalHashMap):
         l = []
-        for k, v in obj:
-            l.append(k)
+        for k, v in obj.items():
+            l.append(pr_str(k))
             l.append(pr_str(v))
-        rv = '{{}}'.format(" ".join(l))
+        # print(l)
+        rv = '{%s}' % " ".join(l)
     else:
         rv = str(obj)
     return rv
