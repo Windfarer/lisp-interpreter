@@ -76,7 +76,7 @@ def nth(lst, n):
     try:
         return lst[n]
     except IndexError:
-        raise mal_types.MalException("xxx")
+        raise mal_types.MalException("index error")
 
 
 def first(lst):
@@ -89,8 +89,6 @@ def rest(lst):
         return mal_types.MalList()
     return mal_types.MalList(lst[1:])
 
-def pr_str_(*args):
-    return mal_types.MalString(" ".join([pr_str(i, print_readably=True) for i in args]))
 
 ns = {
     '+': lambda a, b: mal_types.MalNumber(a.data + b.data), # fixme: operate and return maltypes directly
@@ -107,7 +105,7 @@ ns = {
     "<=": lambda x,y: mal_types.MalBool(x.data<=y.data),
     ">": lambda x,y: mal_types.MalBool(x.data>y.data),
     ">=": lambda x,y: mal_types.MalBool(x.data>=y.data),
-    "pr-str": pr_str_,
+    "pr-str": lambda *args: mal_types.MalString(" ".join([pr_str(i, print_readably=True) for i in args])),
     "str": lambda *args: mal_types.MalString("".join([pr_str(i, print_readably=False) for i in args])),
     "prn": prn,
     "println": println,
