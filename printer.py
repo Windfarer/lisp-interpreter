@@ -1,11 +1,12 @@
 import mal_types
 
 def pr_str(obj, print_readably=True):
-    # print(type(obj))
+    # print(type(obj), obj)
     if isinstance(obj, mal_types.MalString):
+        # print('xxx', repr(obj.data))
         if print_readably is False:
             return str(obj)
-        rv = '"{}"'.format(obj)
+        rv = '"{}"'.format(obj.data.replace('\\', '\\\\').replace('"', '\\"').replace('\n', '\\n'))
     elif callable(obj):
         rv = '#<function>'
     elif isinstance(obj, mal_types.MalAtom):
@@ -26,7 +27,3 @@ def pr_str(obj, print_readably=True):
     else:
         rv = str(obj)
     return rv
-    # if print_readably:
-    #     return rv
-    # else:
-    #     return repr(rv)[1:-1]
