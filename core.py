@@ -44,7 +44,10 @@ def swap(atom, func, *args):
 
 def cons(obj, lst):
     rv = mal_types.MalList([obj])
-    rv.data.extend(lst.data)
+    if isinstance(lst, list):  #fixme
+        rv.data.extend(lst)
+    else:  #
+        rv.data.extend(lst.data)
     return rv
 
 def concat(*lsts):

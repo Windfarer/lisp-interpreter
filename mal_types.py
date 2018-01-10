@@ -55,6 +55,8 @@ class MalVector(MalType):
         return self.data.__iter__()
 
     def __getitem__(self, i):
+        if isinstance(i, slice):
+            return MalList(data=self.data.__getitem__(i))
         return self.data.__getitem__(i)
 
     def append(self, item):
