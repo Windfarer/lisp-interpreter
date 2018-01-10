@@ -120,6 +120,9 @@ def read_form(reader):
     # print('-',  type(token), token)
     if not token:  # "EOF" or None
         return token
+    if token.startswith(';'):
+        reader.next()
+        return read_form(reader)
     if token in _list_token_mapping:
         return read_list(reader, token)
     if token == '{':
@@ -140,6 +143,7 @@ def read_str(string):
     tokens = tokenizer(string)
     # print("tokens", tokens)
     reader = Reader(tokens)
+
     return read_form(reader)
 
 
