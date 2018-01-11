@@ -123,7 +123,9 @@ def is_symbol(x):
     return mal_types.MalBool(False)
 
 def keyword(x):
-    return mal_types.MalKeyword(":{}".format(x))
+    if isinstance(x, mal_types.MalString):
+        return mal_types.MalKeyword(":{}".format(x.data))
+    raise ValueError
 
 def is_keyword(x):
     if isinstance(x, mal_types.MalKeyword):
