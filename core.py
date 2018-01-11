@@ -167,7 +167,6 @@ def get(x, key):
     return mal_types.MalNil()
 
 def is_contains(x, key):
-    print(key, x)
     if isinstance(x, mal_types.MalHashMap) and key in x:
         return mal_types.MalBool(True)
     return mal_types.MalBool(False)
