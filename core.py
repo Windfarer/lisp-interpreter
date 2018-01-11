@@ -66,6 +66,10 @@ def equal(a, b):
         return mal_types.MalBool(True)
     if type(a) != type(b):
         return mal_types.MalBool(False)
+    if isinstance(a, mal_types.MalHashMap) and isinstance(b, mal_types.MalHashMap):
+        if len(a) != len(b):
+            return mal_types.MalBool(False)
+        # todo hashmap equal
     return mal_types.MalBool(a.data==b.data)
 
 def is_list(x):
@@ -93,7 +97,7 @@ def rest(lst):
     return mal_types.MalList(lst[1:])
 
 def throw(x):
-    pass
+    raise mal_types.MalException(x.data)
 
 def is_nil(x):
     if isinstance(x, mal_types.MalNil):
@@ -119,7 +123,7 @@ def is_symbol(x):
     return mal_types.MalBool(False)
 
 def keyword(x):
-    pass
+    return mal_types.MalKeyword(":{}".format(x))
 
 def is_keyword(x):
     if isinstance(x, mal_types.MalKeyword):
@@ -134,31 +138,45 @@ def is_vector(x):
         return mal_types.MalBool(True)
     return mal_types.MalBool(False)
 
-def hash_map(x):
-    pass
+def hash_map(*args):
+    rv = mal_types.MalHashMap()
+    for m, n in zip(args[::2], args[1::2]):
+        rv[m] = n
+    return rv
 
 def is_hash_map(x):
     if isinstance(x, mal_types.MalHashMap):
         return mal_types.MalBool(True)
     return mal_types.MalBool(False)
 
-def assoc(x):
-    pass
+def assoc(x, *args):
+    rv = mal_types.MalHashMap(x)
+    for m, n in zip(args[::2], args[1::2]):
+        rv[m] = n
+    return rv
 
-def dissoc(x):
-    pass
+def dissoc(x, *args):
+    rv = mal_types.MalHashMap(x)
+    for key in args:
+        del[x[key]]
+    return rv
 
-def get(x):
-    pass
+def get(x, key):
+    if isinstance(x, mal_types.MalHashMap):
+        return x.get(key)
+    return mal_types.MalNil()
 
-def is_contains(x):
-    pass
+def is_contains(x, key):
+    print(key, x)
+    if isinstance(x, mal_types.MalHashMap) and key in x:
+        return mal_types.MalBool(True)
+    return mal_types.MalBool(False)
 
 def keys(x):
-    pass
+    return x.keys()
 
 def vals(x):
-    pass
+    return x.values()
 
 def is_sequential(x):
     if isinstance(x, mal_types.list_types):
@@ -166,10 +184,10 @@ def is_sequential(x):
     return mal_types.MalBool(False)
 
 def apply(f, *args):
-    lst = mal_types.MalList()
+    lst = []
     lst.extend(args[:-1])
     lst.extend(args[-1])
-    return f(lst)
+    return f(*lst)
 
 def map_(f, lst):
     return mal_types.MalList([f(i) for i in lst])
@@ -188,6 +206,7 @@ ns = {
     "map?": is_hash_map,
     "assoc": assoc,
     "dissoc": dissoc,
+
     "get": get,
     "contains?": is_contains,
     "keys": keys,

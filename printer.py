@@ -21,4 +21,6 @@ def pr_str(obj, print_readably=True):
             l.append(pr_str(k))
             l.append(pr_str(v))
         return '{%s}' % " ".join(l)
+    elif isinstance(obj, mal_types.MalException):
+        return '"{}"'.format(obj)
     return str(obj)

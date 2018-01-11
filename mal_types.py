@@ -73,7 +73,7 @@ class MalHashMap(MalType):
         elif isinstance(data, dict):
             self.data = OrderedDict(data)
         elif isinstance(data, MalHashMap):
-            self.data = data.data
+            self.data = OrderedDict(data.data)
         elif isinstance(data, (MalList, MalVector, list)):
             self.data = OrderedDict()
             for k, v in zip(data[::2], data[1::2]):
@@ -88,8 +88,25 @@ class MalHashMap(MalType):
     def __setitem__(self, key, value):
         return self.data.__setitem__(key, value)
 
+    def __delitem__(self, key):
+        del(self.data[key])
+
+    def __len__(self):
+        return len(self.data)
+
     def items(self):
         return self.data.items()
+
+    def get(self, key):
+        if key in self.data:
+            return self.data[key]
+        return MalNil()
+
+    def keys(self):
+        return MalList(self.data.keys())
+
+    def values(self):
+        return MalList(self.data.values())
 
 class MalNumber(MalType):
     def __init__(self, data):
@@ -118,11 +135,17 @@ class MalString(MalType):
     def __init__(self, data):
         self.data = str(data)
 
-class MalKeyword(MalType):
+class MalKeyword(MalType):  # fixme: special unicode?
     def __init__(self, data):
         self.data = str(data)
 
+    def __hash__(self):
+        return hash(self.data)
 
+    def __eq__(self, other):
+        if not isinstance(other, MalKeyword):
+            return False
+        return hash(self.data) == hash(other.data)
 class MalBool(MalType):
     def __init__(self, data):
         if isinstance(data, bool):
@@ -166,8 +189,7 @@ class MalAtom(MalType):
         self.ref = ref
 
 class MalException(Exception):
-    def __init__(self, msg=None):
-        self.msg = msg
+    pass
 
 
 list_types = (MalList, MalVector)
