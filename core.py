@@ -79,7 +79,7 @@ def nth(lst, n):
     try:
         return lst[n]
     except IndexError:
-        raise mal_types.MalException("index error")
+        raise mal_types.MalException("nth: index out of range")
 
 
 def first(lst):
@@ -92,6 +92,87 @@ def rest(lst):
         return mal_types.MalList()
     return mal_types.MalList(lst[1:])
 
+def throw(x):
+    pass
+
+def is_nil(x):
+    if isinstance(x, mal_types.MalNil):
+        return mal_types.MalBool(True)
+    return mal_types.MalBool(False)
+
+def is_true(x):
+    if isinstance(x, mal_types.MalBool) and x.data is True:
+        return mal_types.MalBool(True)
+    return mal_types.MalBool(False)
+
+def is_false(x):
+    if isinstance(x, mal_types.MalBool) and x.data is False:
+        return mal_types.MalBool(True)
+    return mal_types.MalBool(False)
+
+def symbol(x):
+    return mal_types.MalSymbol(x.data)
+
+def is_symbol(x):
+    if isinstance(x, mal_types.MalSymbol):
+        return mal_types.MalBool(True)
+    return mal_types.MalBool(False)
+
+def keyword(x):
+    pass
+
+def is_keyword(x):
+    if isinstance(x, mal_types.MalKeyword):
+        return mal_types.MalBool(True)
+    return mal_types.MalBool(False)
+
+def vector(*args):
+    return mal_types.MalVector(args)
+
+def is_vector(x):
+    if isinstance(x, mal_types.MalVector):
+        return mal_types.MalBool(True)
+    return mal_types.MalBool(False)
+
+def hash_map(x):
+    pass
+
+def is_hash_map(x):
+    if isinstance(x, mal_types.MalHashMap):
+        return mal_types.MalBool(True)
+    return mal_types.MalBool(False)
+
+def assoc(x):
+    pass
+
+def dissoc(x):
+    pass
+
+def get(x):
+    pass
+
+def is_contains(x):
+    pass
+
+def keys(x):
+    pass
+
+def vals(x):
+    pass
+
+def is_sequential(x):
+    if isinstance(x, mal_types.list_types):
+        return mal_types.MalBool(True)
+    return mal_types.MalBool(False)
+
+def apply(f, *args):
+    lst = mal_types.MalList()
+    lst.extend(args[:-1])
+    lst.extend(args[-1])
+    return f(lst)
+
+def map_(f, lst):
+    return mal_types.MalList([f(i) for i in lst])
 
 ns = {
     '+': lambda a, b: mal_types.MalNumber(a.data + b.data), # fixme: operate and return maltypes directly
@@ -101,6 +182,17 @@ ns = {
 
     "list": lambda *x: mal_types.MalList(list(x)),
     "list?": is_list,
+    "vector": vector,
+    "vector?": is_vector,
+    "hash-map": hash_map,
+    "map?": is_hash_map,
+    "assoc": assoc,
+    "dissoc": dissoc,
+    "get": get,
+    "contains?": is_contains,
+    "keys": keys,
+    "vals": vals,
+    "sequential?": is_sequential,
     "empty?": lambda x: mal_types.MalBool(len(x) == 0),
     "count": lambda x: mal_types.MalNumber(len(x)),
     "=": equal,
@@ -129,4 +221,17 @@ ns = {
     "nth": nth,
     "first": first,
     "rest": rest,
+
+    "throw": throw,
+    "nil?": is_nil,
+    "true?": is_true,
+    "false?": is_false,
+    "symbol": symbol,
+    "symbol?": is_symbol,
+    "keyword": keyword,
+    "keyword?": is_keyword,
+
+    "apply": apply,
+    "map": map_,
+
 }

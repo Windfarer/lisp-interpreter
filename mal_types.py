@@ -42,6 +42,9 @@ class MalList(MalType):
     def append(self, item):
         self.data.append(item)
 
+    def extend(self, lst):
+        for i in lst:
+            self.data.append(i)
 
 class MalVector(MalType):
     def __init__(self, data=None):
@@ -163,6 +166,8 @@ class MalAtom(MalType):
         self.ref = ref
 
 class MalException(Exception):
-    pass
+    def __init__(self, msg=None):
+        self.msg = msg
+
 
 list_types = (MalList, MalVector)

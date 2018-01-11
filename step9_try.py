@@ -114,6 +114,13 @@ def EVAL(ast, env):
                     ast = quasiquote(ast[1])
                     continue
 
+                elif ast[0].data == 'try*':
+                    try:
+                        return EVAL(ast[1], env)
+                    except mal_types.MalException as e:
+                        new_env = Env(outer=env)
+                        new_env.set(ast[2][1], e)
+                        return EVAL(ast[2][2], new_env)
             # apply
             evaluated_ast = eval_ast(ast, env)
             if callable(evaluated_ast[0]):
@@ -141,7 +148,6 @@ def eval_ast(ast, env):
     elif isinstance(ast, mal_types.MalHashMap):
         return mal_types.MalHashMap({EVAL(k, env): EVAL(v, env) for k, v in ast.items()})
     return ast
-
 
 def PRINT(ast):
     return printer.pr_str(ast)
