@@ -21,7 +21,7 @@ def slurp(filename):
     if isinstance(filename, mal_types.MalString):
         filename = filename.data
     with open(filename, 'rt') as f:
-        file_content = f.read()  # break step 6 read text test, but seems no effect
+        file_content = f.read()
     return mal_types.MalString(file_content)
 
 def atom(obj):
@@ -97,7 +97,7 @@ def rest(lst):
     return mal_types.MalList(lst[1:])
 
 def throw(x):
-    raise mal_types.MalException(x.data)
+    raise mal_types.MalException(x)
 
 def is_nil(x):
     if isinstance(x, mal_types.MalNil):

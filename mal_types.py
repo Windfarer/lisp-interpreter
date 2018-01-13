@@ -135,6 +135,14 @@ class MalString(MalType):
     def __init__(self, data):
         self.data = str(data)
 
+    def __hash__(self):
+        return hash(self.data)
+
+    def __eq__(self, other):
+        if not isinstance(other, MalString):
+            return False
+        return hash(self.data) == hash(other.data)
+
 class MalKeyword(MalType):  # fixme: special unicode?
     def __init__(self, data):
         self.data = str(data)
@@ -146,6 +154,8 @@ class MalKeyword(MalType):  # fixme: special unicode?
         if not isinstance(other, MalKeyword):
             return False
         return hash(self.data) == hash(other.data)
+
+
 class MalBool(MalType):
     def __init__(self, data):
         if isinstance(data, bool):
