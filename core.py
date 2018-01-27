@@ -243,7 +243,7 @@ def seq(x):
     elif isinstance(x, mal_types.MalVector):
         return mal_types.MalList(x.data)
     elif isinstance(x, mal_types.MalString):
-        return mal_types.MalList([mal_types.MalString(i) for i in x.data.split()])
+        return mal_types.MalList([mal_types.MalString(i) for i in x.data])
 
 ns = {
     '+': lambda a, b: mal_types.MalNumber(a.data + b.data), # fixme: operate and return maltypes directly
