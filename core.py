@@ -193,6 +193,26 @@ def apply(f, *args):
 def map_(f, lst):
     return mal_types.MalList([f(i) for i in lst])
 
+def readline(string):
+    try:
+        return mal_types.MalString(input(string))
+    except EOFError:
+        return mal_types.MalNil()
+
+def meta(f):
+    if isinstance(f, mal_types.MalFn):
+        return f.metadata
+    elif callable(f):
+        return mal_types.MalNil()
+
+def with_meta(f, metadata):
+    new_function = mal_types.MalFn(ast=f.ast,
+                                   params=f.params,
+                                   env=f.env,
+                                   fn=f.fn,
+                                   metadata=metadata)
+    return new_function
+
 ns = {
     '+': lambda a, b: mal_types.MalNumber(a.data + b.data), # fixme: operate and return maltypes directly
     '-': lambda a, b: mal_types.MalNumber(a.data - b.data),
@@ -254,4 +274,10 @@ ns = {
     "apply": apply,
     "map": map_,
 
+    "readline": readline,
+
+    "meta": meta,
+    "with-meta": with_meta,
+
+    "*host-language*": mal_types.MalString("python"),
 }

@@ -101,7 +101,7 @@ def read_atom(reader):
         meta_data = read_form(reader)
         reader.next()
         lst = read_form(reader)
-        return mal_types.MalList(["with-meta", lst, meta_data])
+        return mal_types.MalList([mal_types.MalSymbol("with-meta"), lst, meta_data])
     elif token.startswith('"') and token.endswith('"'):
         return mal_types.MalString(bytes(token[1:-1], "utf-8").decode("unicode_escape"))
     elif token.startswith(":"):
