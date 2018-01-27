@@ -124,7 +124,10 @@ def rep(input):
 def main():
     rep("(def! not (fn* (a) (if a false true)))")
     rep('(def! load-file (fn* (f) (eval (read-string (str "(do " (slurp f) ")")))))')
-    repl_env.set("*ARGV*", mal_types.MalList(sys.argv[1:]))
+    repl_env.set("*ARGV*", mal_types.MalList([mal_types.MalString(i) for i in sys.argv[2:]]))
+    if sys.argv[1:]:
+        rep('(load-file "{}")'.format(sys.argv[1]))
+        exit()
     while True:
         try:
             print(rep(input("user> ")))

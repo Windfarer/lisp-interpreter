@@ -1,7 +1,7 @@
 from printer import pr_str
 from reader import read_str
 import mal_types
-
+from time import time
 
 def prn(*args):
     print(" ".join([pr_str(i, print_readably=True) for i in args]))
@@ -151,6 +151,16 @@ def is_hash_map(x):
         return mal_types.MalBool(True)
     return mal_types.MalBool(False)
 
+def is_number(x):
+    if isinstance(x, mal_types.MalNumber):
+        return mal_types.MalBool(True)
+    return mal_types.MalBool(False)
+
+def is_string(x):
+    if isinstance(x, mal_types.MalString):
+        return mal_types.MalBool(True)
+    return mal_types.MalBool(False)
+
 def assoc(x, *args):
     rv = mal_types.MalHashMap(x)
     for m, n in zip(args[::2], args[1::2]):
@@ -213,6 +223,8 @@ def with_meta(f, metadata):
                                    metadata=metadata)
     return new_function
 
+def conj()
+
 ns = {
     '+': lambda a, b: mal_types.MalNumber(a.data + b.data), # fixme: operate and return maltypes directly
     '-': lambda a, b: mal_types.MalNumber(a.data - b.data),
@@ -270,6 +282,8 @@ ns = {
     "symbol?": is_symbol,
     "keyword": keyword,
     "keyword?": is_keyword,
+    "number?": is_number,
+    "string?": is_string,
 
     "apply": apply,
     "map": map_,
@@ -280,4 +294,6 @@ ns = {
     "with-meta": with_meta,
 
     "*host-language*": mal_types.MalString("python"),
+    "time-ms": lambda : mal_types.MalNumber(int(time()))
+    "conj": conj
 }

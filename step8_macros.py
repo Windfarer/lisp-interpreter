@@ -155,7 +155,10 @@ def main():
     rep('(def! load-file (fn* (f) (eval (read-string (str "(do " (slurp f) ")")))))')
     rep("""(defmacro! cond (fn* (& xs) (if (> (count xs) 0) (list'if (first xs) (if (> (count xs) 1) (nth xs 1) (throw "odd number of forms to cond")) (cons'cond (rest (rest xs)))))))""")
     rep("""(defmacro! or (fn* (& xs) (if (empty? xs) nil (if (= 1 (count xs)) (first xs) `(let* (or_FIXME ~(first xs)) (if or_FIXME or_FIXME (or ~@(rest xs))))))))""")
-    repl_env.set("*ARGV*", mal_types.MalList(sys.argv[1:]))
+    repl_env.set("*ARGV*", mal_types.MalList([mal_types.MalString(i) for i in sys.argv[2:]]))
+    if sys.argv[1:]:
+        rep('(load-file "{}")'.format(sys.argv[1]))
+        exit()
     while True:
         try:
             print(rep(input("user> ")))
