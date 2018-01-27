@@ -174,7 +174,7 @@ def main():
             # raise e
             print(e)
         except Exception as e:
-            # raise e
+            raise e
             print(e)
 
 if __name__ == '__main__':

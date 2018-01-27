@@ -184,16 +184,12 @@ class MalNil(MalType):
         return 0
 
 class MalFn(MalType):
-    def __init__(self, ast, params, env, fn, metadata=None):
+    def __init__(self, ast, params, env, fn):
         self.ast = ast
         self.params = params
         self.env = env
         self.fn = fn
         self.is_macro = False
-        if not metadata:
-            self.metadata = MalNil()
-        else:
-            self.metadata = metadata
 
     def __call__(self, *args, **kwargs):
         return self.fn(*args, **kwargs)

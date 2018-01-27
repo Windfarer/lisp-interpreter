@@ -2,7 +2,8 @@ from printer import pr_str
 from reader import read_str
 import mal_types
 from time import time
-
+import types
+from copy import copy
 def prn(*args):
     print(" ".join([pr_str(i, print_readably=True) for i in args]))
     return mal_types.MalNil()
@@ -209,19 +210,13 @@ def readline(string):
     except EOFError:
         return mal_types.MalNil()
 
-def meta(f):
-    if isinstance(f, mal_types.MalFn):
-        return f.metadata
-    elif callable(f):
-        return mal_types.MalNil()
+def meta(x):
+    return getattr(x, 'metadata', mal_types.MalNil())
 
-def with_meta(f, metadata):
-    new_function = mal_types.MalFn(ast=f.ast,
-                                   params=f.params,
-                                   env=f.env,
-                                   fn=f.fn,
-                                   metadata=metadata)
-    return new_function
+def with_meta(x, metadata):
+    rv = copy(x)
+    rv.metadata = metadata
+    return rv
 
 def conj(collection, *elements):
     if isinstance(collection, mal_types.MalList):
@@ -244,6 +239,17 @@ def seq(x):
         return mal_types.MalList(x.data)
     elif isinstance(x, mal_types.MalString):
         return mal_types.MalList([mal_types.MalString(i) for i in x.data])
+
+def is_function(x):
+    if isinstance(x, mal_types.MalFn) or isinstance(x, types.FunctionType):
+        return mal_types.MalBool(True)
+    return mal_types.MalBool(False)
+
+def is_macro(x):  #fixme
+    if isinstance(x, mal_types.MalFn) or isinstance(x, types.FunctionType):
+        return mal_types.MalBool(True)
+    return mal_types.MalBool(False)
+
 
 ns = {
     '+': lambda a, b: mal_types.MalNumber(a.data + b.data), # fixme: operate and return maltypes directly
@@ -304,6 +310,8 @@ ns = {
     "keyword?": is_keyword,
     "number?": is_number,
     "string?": is_string,
+    "fn?": is_function,
+    "macro?": is_macro,
 
     "apply": apply,
     "map": map_,
@@ -314,7 +322,7 @@ ns = {
     "with-meta": with_meta,
 
     "*host-language*": mal_types.MalString("python"),
-    "time-ms": lambda : mal_types.MalNumber(int(time())),
+    "time-ms": lambda : mal_types.MalNumber(int(time()*1000)),
     "conj": conj,
     "seq": seq
 }
