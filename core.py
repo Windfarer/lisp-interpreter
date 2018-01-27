@@ -223,7 +223,27 @@ def with_meta(f, metadata):
                                    metadata=metadata)
     return new_function
 
-def conj()
+def conj(collection, *elements):
+    if isinstance(collection, mal_types.MalList):
+        lst = collection.data
+        for i in elements:
+            lst.insert(0, i)
+        return mal_types.MalList(lst)
+    if isinstance(collection, mal_types.MalVector):
+        lst = collection.data
+        for i in elements:
+            lst.append(i)
+        return mal_types.MalVector(lst)
+
+def seq(x):
+    if not x.data:
+        return mal_types.MalNil()
+    elif isinstance(x, mal_types.MalList):
+        return x
+    elif isinstance(x, mal_types.MalVector):
+        return mal_types.MalList(x.data)
+    elif isinstance(x, mal_types.MalString):
+        return mal_types.MalList([mal_types.MalString(i) for i in x.data.split()])
 
 ns = {
     '+': lambda a, b: mal_types.MalNumber(a.data + b.data), # fixme: operate and return maltypes directly
@@ -294,6 +314,7 @@ ns = {
     "with-meta": with_meta,
 
     "*host-language*": mal_types.MalString("python"),
-    "time-ms": lambda : mal_types.MalNumber(int(time()))
-    "conj": conj
+    "time-ms": lambda : mal_types.MalNumber(int(time())),
+    "conj": conj,
+    "seq": seq
 }
