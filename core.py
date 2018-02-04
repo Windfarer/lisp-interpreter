@@ -33,7 +33,9 @@ def is_atom(obj):
     return mal_types.MalBool(isinstance(obj, mal_types.MalAtom))
 
 def deref(obj):
-    return obj.ref
+    if isinstance(obj, mal_types.MalAtom):
+        return obj.ref
+    return obj  # fixme?
 
 def reset(atom, value):
     atom.ref = value
@@ -87,10 +89,12 @@ def nth(lst, n):
         raise mal_types.MalException("nth: index out of range")
 
 
-def first(lst):
-    if isinstance(lst, mal_types.MalNil) or len(lst) == 0:
+def first(x):
+    if any([isinstance(x, mal_types.MalNil),
+            isinstance(x, mal_types.list_types) and len(x) == 0,
+           ]):
         return mal_types.MalNil()
-    return lst[0]
+    return x[0]
 
 def rest(lst):
     if isinstance(lst, mal_types.MalNil):

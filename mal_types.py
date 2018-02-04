@@ -191,8 +191,8 @@ class MalFn(MalType):
         self.fn = fn
         self.is_macro = False
 
-    def __call__(self, *args, **kwargs):
-        return self.fn(*args, **kwargs)
+    def __call__(self, *args):
+        return self.fn(*args)
 
 class MalAtom(MalType):
     def __init__(self, ref):

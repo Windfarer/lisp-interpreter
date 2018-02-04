@@ -38,7 +38,7 @@ def PRINT(ast):
 
 
 repl_env = {
-    '+': lambda a, b: mal_types.MalNumber(a.data + b.data), # fixme: operate and return maltypes directly
+    '+': lambda a, b, c: mal_types.MalNumber(a.data + b.data), # fixme: operate and return maltypes directly
     '-': lambda a, b: mal_types.MalNumber(a.data - b.data),
     '*': lambda a, b: mal_types.MalNumber(a.data * b.data),
     '/': lambda a, b: mal_types.MalNumber((a.data / b.data)),
@@ -52,7 +52,7 @@ def rep():
         except mal_types.MalException as e:
             print(e)
         except Exception as e:
-            raise e
+            # raise e
             print(e)
 
 
