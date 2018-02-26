@@ -1,6 +1,7 @@
 from collections import OrderedDict
 from itertools import chain
 
+
 class MalType(object):
     data = None
 

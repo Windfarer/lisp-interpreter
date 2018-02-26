@@ -1,6 +1,7 @@
 import re
 import mal_types
 
+
 _mal_token_pattern = re.compile(r'''[\s,]*(~@|[\[\]{}()'`~^@]|"(?:\\.|[^\\"])*"|;.*|[^\s\[\]{}('"`,;)]*)''')
 
 _list_token_mapping = {

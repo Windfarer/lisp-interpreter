@@ -4,6 +4,8 @@ import mal_types
 from time import time
 import types
 from copy import copy
+
+
 def prn(*args):
     print(" ".join([pr_str(i, print_readably=True) for i in args]))
     return mal_types.MalNil()
@@ -89,14 +91,18 @@ def nth(lst, n):
         raise mal_types.MalException("nth: index out of range")
 
 
-def first(x):
-    if any([isinstance(x, mal_types.MalNil),
-            isinstance(x, mal_types.list_types) and len(x) == 0,
-           ]):
+def first(x):  # fixme: dynamic arg is poison
+    # print('x is', type(x), x)
+    if isinstance(x, mal_types.MalNil):
+        return mal_types.MalNil()
+    elif isinstance(x, mal_types.list_types) and len(x) == 0:
+        return mal_types.MalNil()
+    elif isinstance(x, list) and len(x) == 0:
         return mal_types.MalNil()
     return x[0]
 
 def rest(lst):
+    # print("type!!!!!!!", type(lst), lst)
     if isinstance(lst, mal_types.MalNil):
         return mal_types.MalList()
     return mal_types.MalList(lst[1:])

@@ -124,13 +124,17 @@ def EVAL(ast, env):
             # apply
             evaluated_ast = eval_ast(ast, env)
             if callable(evaluated_ast[0]):
-                print("function", ast)
+                #print("function", ast)
                 f, args = evaluated_ast[0], evaluated_ast[1:]
+                print('f', f)
+                print('args', args)
                 if isinstance(f, mal_types.MalFn):
                     ast= f.ast
                     env = Env(outer=f.env, binds=f.params, exprs=args)
                     continue
                 else:
+                    print('********************f', f)
+                    print('********************args', args)
                     return f(*args)
             return evaluated_ast
         return mal_types.MalNil()
@@ -139,7 +143,7 @@ def EVAL(ast, env):
 def eval_ast(ast, env):
     if isinstance(ast, mal_types.MalSymbol):
         v = env.get(ast)
-        print("get symbol", ast)
+        # print("get symbol", ast)
         if v is None:
             raise mal_types.MalException("'{}' not found.".format(ast.data))
         return v
