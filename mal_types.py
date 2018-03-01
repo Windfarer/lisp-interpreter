@@ -90,7 +90,8 @@ class MalHashMap(MalType):
         return self.data.__setitem__(key, value)
 
     def __delitem__(self, key):
-        return self.data.__delitem__(key)
+        if key in self.data:
+            return self.data.__delitem__(key)
 
     def __len__(self):
         return len(self.data)
