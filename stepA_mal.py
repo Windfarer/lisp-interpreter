@@ -55,6 +55,7 @@ def READ(string):
 
 def EVAL(ast, env):
     while True:
+        # print('INLOOP', ast)
         if not isinstance(ast, mal_types.list_types):
             return eval_ast(ast, env)
         elif not ast:
@@ -83,13 +84,14 @@ def EVAL(ast, env):
                 elif  ast[0].data == 'let*':
                     let_env = Env(outer=env)
                     for k ,v in  zip(ast[1][::2], ast[1][1::2]):
-                        let_env.set(k, EVAL(v, let_env))
+                        new_value = EVAL(v, let_env)
+                        let_env.set(k, new_value)
+                       # print('let_env', k, new_value)
                     ast, env = ast[2], let_env
                     continue
 
                 elif ast[0].data == 'do':
-                    ast = eval_ast(ast[1:], env)[-1]
-                    continue
+                    return eval_ast(ast[1:], env)[-1]
 
                 elif ast[0].data == 'if':
                     if EVAL(ast[1], env):
@@ -126,15 +128,16 @@ def EVAL(ast, env):
             if callable(evaluated_ast[0]):
                 #print("function", ast)
                 f, args = evaluated_ast[0], evaluated_ast[1:]
-                print('f', f)
-                print('args', args)
+                # print('f', f)
+                # print('args', args)
                 if isinstance(f, mal_types.MalFn):
                     ast= f.ast
                     env = Env(outer=f.env, binds=f.params, exprs=args)
                     continue
                 else:
-                    print('********************f', f)
-                    print('********************args', args)
+                    # print('********************f', f)
+                    # print('********************args', args)
+                    # print('@result', type(x), x)
                     return f(*args)
             return evaluated_ast
         return mal_types.MalNil()
@@ -163,7 +166,6 @@ def rep(input):
 
 
 def main():
-    rep('(println (str "Mal ["*host-language*"]"))')
     rep("(def! not (fn* (a) (if a false true)))")
     rep('(def! load-file (fn* (f) (eval (read-string (str "(do " (slurp f) ")")))))')
     rep("""(defmacro! cond (fn* (& xs) (if (> (count xs) 0) (list'if (first xs) (if (> (count xs) 1) (nth xs 1) (throw "odd number of forms to cond")) (cons'cond (rest (rest xs)))))))""")
@@ -172,6 +174,7 @@ def main():
     if sys.argv[1:]:
         rep('(load-file "{}")'.format(sys.argv[1]))
         exit()
+    rep('(println (str "Mal ["*host-language*"]"))')
     while True:
         try:
             print(rep(input("user> ")))

@@ -58,7 +58,7 @@ def EVAL(ast, env):
 
                 elif ast[0].data == 'do':
                     ast = eval_ast(ast[1:], env)[-1]
-                    continue
+                    return ast
 
                 elif ast[0].data == 'if':
                     if EVAL(ast[1], env):

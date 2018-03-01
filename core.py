@@ -18,7 +18,9 @@ def println(*args):
 def read_string(string):
     if isinstance(string, mal_types.MalString):
         string = string.data
-    return read_str(string)
+    rv = read_str(string)
+    # print("read_string result:", rv)
+    return rv
 
 def slurp(filename):
     if isinstance(filename, mal_types.MalString):
@@ -78,6 +80,7 @@ def equal(a, b):
     return mal_types.MalBool(a.data==b.data)
 
 def is_list(x):
+    #print("is_list?", x, type(x), isinstance(x, mal_types.MalList))
     if isinstance(x, mal_types.MalList):
         return mal_types.MalBool(True)
     return mal_types.MalBool(False)
@@ -91,18 +94,15 @@ def nth(lst, n):
         raise mal_types.MalException("nth: index out of range")
 
 
-def first(x):  # fixme: dynamic arg is poison
-    # print('x is', type(x), x)
+def first(x):
+    # print('x.data', x.data)
     if isinstance(x, mal_types.MalNil):
         return mal_types.MalNil()
     elif isinstance(x, mal_types.list_types) and len(x) == 0:
         return mal_types.MalNil()
-    elif isinstance(x, list) and len(x) == 0:
-        return mal_types.MalNil()
     return x[0]
 
 def rest(lst):
-    # print("type!!!!!!!", type(lst), lst)
     if isinstance(lst, mal_types.MalNil):
         return mal_types.MalList()
     return mal_types.MalList(lst[1:])
@@ -144,9 +144,10 @@ def is_keyword(x):
     return mal_types.MalBool(False)
 
 def vector(*args):
-    return mal_types.MalVector(args)
+    return mal_types.MalVector(list(args))
 
 def is_vector(x):
+#    print('**is_vector', x, type(x))
     if isinstance(x, mal_types.MalVector):
         return mal_types.MalBool(True)
     return mal_types.MalBool(False)
@@ -206,12 +207,14 @@ def is_sequential(x):
     return mal_types.MalBool(False)
 
 def apply(f, *args):
+    # print('APPLY!!', f, args)
     lst = []
     lst.extend(args[:-1])
     lst.extend(args[-1])
     return f(*lst)
 
 def map_(f, lst):
+    #print('**MAP', type(f), f, lst)
     return mal_types.MalList([f(i) for i in lst])
 
 def readline(string):
@@ -261,6 +264,15 @@ def is_macro(x):  #fixme
     return mal_types.MalBool(False)
 
 
+def is_empty(x):
+    # print('&&&&in is empty?', x)
+    if isinstance(x, mal_types.list_types):
+        return mal_types.MalBool(len(x) == 0)
+    if isinstance(x, mal_types.MalNil):
+        return mal_types.MalBool(True)
+    return mal_types.MalBool(False)
+
+
 ns = {
     '+': lambda a, b: mal_types.MalNumber(a.data + b.data), # fixme: operate and return maltypes directly
     '-': lambda a, b: mal_types.MalNumber(a.data - b.data),
@@ -281,7 +293,7 @@ ns = {
     "keys": keys,
     "vals": vals,
     "sequential?": is_sequential,
-    "empty?": lambda x: mal_types.MalBool(len(x) == 0),
+    "empty?": is_empty,
     "count": lambda x: mal_types.MalNumber(len(x)),
     "=": equal,
     "<": lambda x, y: mal_types.MalBool(x.data<y.data),

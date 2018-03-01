@@ -25,6 +25,13 @@ class MalType(object):
 
 
 class MalList(MalType):
+    def __repr__(self):
+        return "<MalList {}>".format(self.data)
+
+    def __str__(self):
+        return self.__repr__()
+
+
     def __init__(self, data=None):
         if not data:
             data = []
@@ -48,6 +55,12 @@ class MalList(MalType):
             self.data.append(i)
 
 class MalVector(MalType):
+    def __repr__(self):
+        return "<MalVector {}>".format(self.data)
+
+    def __str__(self):
+        return self.__repr__()
+
     def __init__(self, data=None):
         if not data:
             data = []
@@ -185,6 +198,12 @@ class MalNil(MalType):
         return 0
 
 class MalFn(MalType):
+    def __repr__(self):
+        return "<MalFn>"
+
+    def __str__(self):
+        return self.__repr__()
+
     def __init__(self, ast, params, env, fn):
         self.ast = ast
         self.params = params
