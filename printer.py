@@ -23,5 +23,5 @@ def pr_str(obj, print_readably=True):
             l.append(pr_str(v, print_readably=print_readably))
         return '{%s}' % " ".join(l)
     elif isinstance(obj, mal_types.MalException):
-        return '"{}"'.format(obj)
+        return pr_str(obj.data, print_readably=print_readably)
     return str(obj)

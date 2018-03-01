@@ -148,7 +148,7 @@ def eval_ast(ast, env):
         v = env.get(ast)
         # print("get symbol", ast)
         if v is None:
-            raise mal_types.MalException("'{}' not found.".format(ast.data))
+            raise mal_types.MalException(mal_types.MalString("'{}' not found.".format(ast.data)))
         return v
     elif isinstance(ast, mal_types.list_types):
         class_type = ast.__class__
@@ -182,7 +182,7 @@ def main():
             # raise e
             print(e)
         except Exception as e:
-            # raise e
+            raise e
             print(e)
 
 if __name__ == '__main__':

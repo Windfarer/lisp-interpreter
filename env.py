@@ -1,4 +1,4 @@
-from mal_types import MalException, MalSymbol, MalList
+from mal_types import MalException, MalSymbol, MalList, MalString
 
 
 class Env(object):
@@ -25,7 +25,7 @@ class Env(object):
             return self
         if self.outer is not None:
             return self.outer.find(key)
-        raise MalException("'{}' not found".format(key))
+        raise MalException(MalString("'{}' not found".format(key)))
 
     def get(self, key):
         if isinstance(key, MalSymbol):
